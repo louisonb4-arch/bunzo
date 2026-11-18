@@ -9,6 +9,8 @@
   const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   gsap.registerPlugin(ScrollTrigger, SplitText);
+  // pas de recalcul quand la barre d'adresse mobile apparaît/disparaît (évite les sauts)
+  ScrollTrigger.config({ ignoreMobileResize: true });
   gsap.defaults({ ease: 'power3.out' });
 
   /* ---------- Smooth scroll ---------- */
@@ -183,8 +185,8 @@
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
-          trigger: hero, start: 'top top', end: () => '+=' + innerHeight * (desk ? 2.4 : 2.2),
-          pin: '.hero__pin', scrub: 1, anticipatePin: 1, invalidateOnRefresh: true,
+          trigger: hero, start: 'top top', end: () => '+=' + innerHeight * (desk ? 1.7 : 1.5),
+          pin: '.hero__pin', scrub: true, anticipatePin: 1, invalidateOnRefresh: true,
           onRefreshInit: () => gsap.set(stack, { x: 0, y: 0, scale: 1 }),
           onRefresh: placeTags
         }
@@ -195,10 +197,8 @@
         .to('.hero__foot', { autoAlpha: 0, duration: .3 }, 0)
         .to('.stack__shadow', { autoAlpha: 0, duration: .3 }, .1)
         .to(stack, { x: () => P.x, y: () => P.y, scale: () => S, duration: .9, ease: 'power2.inOut' }, .15)
-        .to('.hero__glow', { scale: 1.4, autoAlpha: .5, duration: 1 }, .15);
       ORDER.forEach((k, i) => {
         tl.to(L[k], { y: ex(k), duration: .9, ease: 'power3.inOut' }, .3 + Math.abs(i - 2) * .04);
-        tl.to(L[k], { rotation: (i % 2 ? -1 : 1) * (desk ? 3 : 2), duration: .9, ease: 'power2.inOut' }, .3);
       });
       tl.fromTo('.anat__kicker', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: .3 }, .85);
       ORDER.forEach((k, i) => {
@@ -210,7 +210,7 @@
       // pause de lecture puis remontage
       tl.to({}, { duration: .5 })
         .to('.anat__kicker, .tag', { autoAlpha: 0, duration: .25 }, 2.3)
-        .to(ORDER.map(k => L[k]), { y: 0, rotation: 0, duration: .6, ease: 'power3.inOut', stagger: .03 }, 2.35)
+        .to(ORDER.map(k => L[k]), { y: 0, duration: .6, ease: 'power3.inOut', stagger: .03 }, 2.35)
         .to(stack, { x: 0, y: () => P.y * .35, scale: desk ? .9 : .82, duration: .6, ease: 'power2.inOut' }, 2.35);
 
       // parallaxe souris (desktop) sur les couches
@@ -247,60 +247,57 @@
         onUpdate: () => el.textContent = o.v.toFixed(dec).replace('.', ',') });
     });
 
-    /* ---- SIGNATURES : défilement horizontal ---- */
+    /* ---- SIGNATURES ---- */
     const track = $('#sgTrack'), slides = $$('.sl', track);
-    const hz = gsap.to(track, {
-      x: () => -(track.scrollWidth - innerWidth), ease: 'none',
-      scrollTrigger: {
-        trigger: '.sg', pin: '.sg__pin', start: 'top top', end: () => '+=' + (track.scrollWidth - innerWidth) * 1.1,
-        scrub: 1, invalidateOnRefresh: true, anticipatePin: 1,
-        onUpdate: s => {
-          const i = Math.min(slides.length - 1, Math.round(s.progress * (slides.length - 1)));
-          $('#sgNum').textContent = '0' + (i + 1);
-          gsap.set('#sgBar', { scaleX: (s.progress * (slides.length - 1) + 1) / slides.length });
+    gsap.set('.sl__img', { xPercent: -50, yPercent: -50 });
+    const setCount = p => {
+      const i = Math.min(slides.length - 1, Math.round(p * (slides.length - 1)));
+      $('#sgNum').textContent = '0' + (i + 1);
+      gsap.set('#sgBar', { scaleX: (p * (slides.length - 1) + 1) / slides.length });
+    };
+    mm.add('(min-width:900px)', () => {
+      // ordinateur : défilement horizontal épinglé, sobre
+      const hz = gsap.to(track, {
+        x: () => -(track.scrollWidth - innerWidth), ease: 'none',
+        scrollTrigger: {
+          trigger: '.sg', pin: '.sg__pin', start: 'top top', end: () => '+=' + (track.scrollWidth - innerWidth),
+          scrub: true, invalidateOnRefresh: true, anticipatePin: 1, onUpdate: s => setCount(s.progress)
         }
-      }
+      });
+      slides.forEach(sl => gsap.fromTo($('.sl__img', sl), { scale: .86 }, { scale: 1, ease: 'none',
+        scrollTrigger: { containerAnimation: hz, trigger: sl, start: 'left right', end: 'left left', scrub: true } }));
     });
-    slides.forEach(sl => {
-      const img = $('.sl__img', sl), name = $('.sl__name', sl), info = $('.sl__info', sl);
-      const ca = { containerAnimation: hz, trigger: sl, scrub: true };
-      gsap.fromTo(img, { rotation: 14, scale: .82 }, { rotation: 0, scale: 1, ease: 'none', scrollTrigger: { ...ca, start: 'left right', end: 'left left' } });
-      gsap.to(img, { rotation: -10, ease: 'none', scrollTrigger: { ...ca, start: 'left left', end: 'right left' } });
-      gsap.fromTo(name, { xPercent: 22 }, { xPercent: -22, ease: 'none', scrollTrigger: { ...ca, start: 'left right', end: 'right left' } });
-      gsap.from(info.children, { y: 40, autoAlpha: 0, stagger: .06, ease: 'none', scrollTrigger: { ...ca, start: 'left 70%', end: 'left 15%' } });
-    });
-
-    /* ---- GALERIE : colonnes en parallaxe + révélation ---- */
-    $$('.gl__col').forEach(c => gsap.to(c, {
-      yPercent: parseFloat(c.dataset.speed) * 100, ease: 'none',
-      scrollTrigger: { trigger: '.gl__cols', start: 'top bottom', end: 'bottom top', scrub: true }
-    }));
-    $$('.ph').forEach(ph => {
-      gsap.to(ph, { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: ph, start: 'top 90%' } });
-      gsap.fromTo($('img', ph), { yPercent: -12 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: ph, start: 'top bottom', end: 'bottom top', scrub: true } });
+    mm.add('(max-width:899px)', () => {
+      // mobile : carrousel natif au doigt (aucun scroll détourné)
+      const onS = () => setCount(track.scrollLeft / Math.max(1, track.scrollWidth - track.clientWidth));
+      track.addEventListener('scroll', onS, { passive: true }); onS();
+      gsap.from('.sl:first-child .sl__img', { scale: .85, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.sg', start: 'top 70%' } });
+      return () => track.removeEventListener('scroll', onS);
     });
 
-    /* ---- AVIS : cartes qui s'empilent ---- */
-    const rvs = $$('.rv');
-    rvs.forEach((c, i) => {
-      if (i === rvs.length - 1) return;
-      gsap.to(c, { scale: .9 + i * .03, filter: 'brightness(.85)', ease: 'none',
-        scrollTrigger: { trigger: rvs[i + 1], start: 'top bottom', end: 'top 30%', scrub: true } });
+    /* ---- GALERIE : parallaxe légère (ordinateur), simple apparition (mobile) ---- */
+    mm.add('(min-width:900px)', () => {
+      $$('.gl__col').forEach(c => gsap.to(c, {
+        yPercent: parseFloat(c.dataset.speed) * 60, ease: 'none',
+        scrollTrigger: { trigger: '.gl__cols', start: 'top bottom', end: 'bottom top', scrub: true }
+      }));
     });
+    $$('.ph').forEach(ph => gsap.from(ph, { autoAlpha: 0, y: 40, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: ph, start: 'top 92%' } }));
+
+    /* ---- AVIS : empilement en CSS (sticky), aucune animation au scroll ---- */
     gsap.from('.av__score b', { yPercent: 40, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.av__score', start: 'top 85%' } });
 
     /* ---- VENIR ---- */
     gsap.to('.vn__img', { clipPath: 'inset(0 0 0% 0 round 20px)', duration: 1.6, ease: 'expo.inOut', scrollTrigger: { trigger: '.vn__img', start: 'top 85%' } });
-    gsap.to('.vn__img img', { scale: 1, duration: 2, ease: 'expo.out', scrollTrigger: { trigger: '.vn__img', start: 'top 85%' } });
     gsap.from('.vn__street', { yPercent: 30, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.vn__street', start: 'top 88%' } });
     gsap.from('.hours tr', { autoAlpha: 0, x: -20, stagger: .05, duration: .8, scrollTrigger: { trigger: '.hours', start: 'top 85%' } });
 
     /* ---- FOOTER : le logo se ré-assemble ---- */
-    const ft = gsap.timeline({ scrollTrigger: { trigger: '#ftLogo', start: 'top 95%', end: 'bottom bottom', scrub: 1 } });
-    ft.from('.f-top', { yPercent: -70, rotation: -6, ease: 'none' }, 0)
-      .from('.f-bot', { yPercent: 90, ease: 'none' }, 0)
-      .from('.f-word', { scaleY: .2, scaleX: 1.15, ease: 'none' }, 0)
-      .from('.f-reg', { scale: 0, ease: 'none' }, .5);
+    const ft = gsap.timeline({ defaults: { duration: 1.1, ease: 'expo.out' }, scrollTrigger: { trigger: '#ftLogo', start: 'top 85%' } });
+    ft.from('.f-top', { yPercent: -60, autoAlpha: 0 }, 0)
+      .from('.f-bot', { yPercent: 60, autoAlpha: 0 }, .08)
+      .from('.f-word', { yPercent: 30, autoAlpha: 0 }, .04)
+      .from('.f-reg', { scale: 0, ease: 'back.out(2)', duration: .6 }, .5);
     gsap.from('.ft__order', { yPercent: 50, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.ft__cta', start: 'top 85%' } });
 
     /* ---- Classiques : entrée ---- */
