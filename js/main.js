@@ -82,39 +82,57 @@
   gsap.set(ORDER.map(k => L[k]), { y: () => -innerHeight * 1.1, autoAlpha: 0 });
   gsap.set('.stack__shadow', { scaleX: .3, autoAlpha: 0 });
 
-  const imgsReady = Promise.all($$('img', stack).map(im => im.decode ? im.decode().catch(() => {}) : Promise.resolve()));
+  const imgsReady = Promise.all([...$$('img', stack), ...$$('#loader img')].map(im => im.decode ? im.decode().catch(() => {}) : Promise.resolve()));
   const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
-  const minTime = new Promise(r => setTimeout(r, RM ? 0 : 900));
+  const minTime = new Promise(r => setTimeout(r, RM ? 0 : 1300));
 
-  // compteur de "préchauffe"
+  /* ---- Loader : le bun respire, les étapes défilent, puis il s'ouvre sur le site ---- */
+  const ldBun = { top: $('.ld-top'), pat: $('.ld-pat'), bot: $('.ld-bot') };
+  const steps = ['On chauffe la plaque', 'On forme les boules', 'Smash !', 'On toaste le bun'];
   const ld = { v: 0 };
+  gsap.from('#ldBun img', { yPercent: (i) => [60, 0, -80][i], autoAlpha: 0, duration: .9, stagger: .08, ease: 'expo.out' });
+  const breathe = gsap.timeline({ repeat: -1, yoyo: true, defaults: { duration: .55, ease: 'sine.inOut' } })
+    .to(ldBun.top, { yPercent: -14, rotation: -3 }, 0).to(ldBun.bot, { yPercent: 6 }, 0).to(ldBun.pat, { scaleX: 1.04 }, 0);
+  let si = 0;
   const ldTween = gsap.to(ld, {
-    v: 200, duration: RM ? 0.01 : 1.1, ease: 'power2.inOut',
-    onUpdate: () => { $('#ldNum').textContent = String(Math.round(ld.v)).padStart(3, '0'); gsap.set('#ldBar', { scaleX: ld.v / 200 }); }
+    v: 100, duration: RM ? 0.01 : 1.5, ease: 'power2.inOut',
+    onUpdate: () => {
+      $('#ldNum').textContent = Math.round(ld.v); gsap.set('#ldBar', { scaleX: ld.v / 100 });
+      const k = Math.min(steps.length - 1, Math.floor(ld.v / 100 * steps.length));
+      if (k !== si) { si = k; const t = $('#ldTxt'); gsap.killTweensOf(t); gsap.timeline().to(t, { yPercent: -100, duration: .18, ease: 'power2.in' }).add(() => t.textContent = steps[k]).fromTo(t, { yPercent: 100 }, { yPercent: 0, duration: .3, ease: 'expo.out' }); }
+    }
   });
-  gsap.from('.loader__logo', { yPercent: 30, autoAlpha: 0, duration: 1, ease: 'expo.out' });
 
   Promise.all([imgsReady, fontsReady, minTime, ldTween.then()]).then(introHero);
 
   function introHero() {
+    breathe.pause();
     const tl = gsap.timeline();
-    tl.to('.loader__logo', { scale: .8, autoAlpha: 0, duration: .45, ease: 'power2.in' })
-      .to('.loader__top, .loader__bot, .loader__bar', { autoAlpha: 0, duration: .3 }, '<')
-      .to('#loader', { clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'expo.inOut' }, '-=.1')
+    const big = Math.hypot(innerWidth, innerHeight);
+    // 1. le bun se serre (smash), 2. il s'ouvre : le haut monte, le bas descend, le steak file vers nous
+    tl.to(ldBun.top, { yPercent: 6, rotation: 0, duration: .22, ease: 'power3.in' })
+      .to(ldBun.bot, { yPercent: -4, duration: .22, ease: 'power3.in' }, '<')
+      .to(ldBun.pat, { scaleX: 1.14, scaleY: .7, duration: .22, ease: 'power3.in' }, '<')
+      .to('.loader__top, .loader__bot, .loader__bar', { autoAlpha: 0, duration: .25 }, '<')
+      .to(ldBun.top, { yPercent: -260, rotation: -16, scale: 2.4, duration: .8, ease: 'power3.in' }, '+=.02')
+      .to(ldBun.bot, { yPercent: 280, rotation: 10, scale: 2.4, duration: .8, ease: 'power3.in' }, '<')
+      .to(ldBun.pat, { scale: 4, autoAlpha: 0, duration: .65, ease: 'power3.in' }, '<.05')
+      .to('#ldBg', { '--h': big * .6 + 'px', duration: .95, ease: 'power3.inOut' }, '<')
       .set('#loader', { display: 'none' })
       .to(titleSpans, { yPercent: 0, duration: 1.2, stagger: .09, ease: 'expo.out' }, '-=.55');
 
-    // le burger se monte couche par couche : chaque couche tombe, s'écrase, rebondit
+    // le burger du hero se monte couche par couche
     const seq = ['bottom', 'p2', 'p1', 'garnish', 'top'];
+    const t0 = tl.duration() - .9;
     seq.forEach((k, i) => {
-      const at = .85 + i * .13;
-      tl.to(L[k], { y: 0, autoAlpha: 1, duration: .55, ease: 'power3.in' }, at)
-        .fromTo(L[k], { scaleY: .78, scaleX: 1.08, transformOrigin: '50% 100%' }, { scaleY: 1, scaleX: 1, duration: .7, ease: 'elastic.out(1,.45)' }, at + .55)
-        .to(stack, { y: 6, duration: .08, yoyo: true, repeat: 1, ease: 'power1.out' }, at + .55);
+      const at = t0 + i * .11;
+      tl.to(L[k], { y: 0, autoAlpha: 1, duration: .5, ease: 'power3.in' }, at)
+        .fromTo(L[k], { scaleY: .78, scaleX: 1.08, transformOrigin: '50% 100%' }, { scaleY: 1, scaleX: 1, duration: .7, ease: 'elastic.out(1,.45)' }, at + .5)
+        .to(stack, { y: 6, duration: .08, yoyo: true, repeat: 1, ease: 'power1.out' }, at + .5);
     });
-    tl.to('.stack__shadow', { scaleX: 1, autoAlpha: 1, duration: .9 }, 1.2)
-      .to('.hd, .hero__foot', { autoAlpha: 1, duration: .8 }, 1.7)
-      .add(afterIntro, 2.15);
+    tl.to('.stack__shadow', { scaleX: 1, autoAlpha: 1, duration: .9 }, t0 + .3)
+      .to('.hd, .hero__foot', { autoAlpha: 1, duration: .8 }, t0 + .6)
+      .add(afterIntro, t0 + 1);
     if (RM) tl.progress(1);
   }
 
@@ -231,16 +249,8 @@
       gsap.from(el, { autoAlpha: 0, x: -14, duration: .9, scrollTrigger: { trigger: el, start: 'top 90%' } });
     });
 
-    /* ---- MANIFESTE : les mots se remplissent au scroll ---- */
-    const split = new SplitText('#mfTxt', { type: 'words', wordsClass: 'w' });
-    gsap.to(split.words, {
-      opacity: 1, stagger: .1, ease: 'none',
-      scrollTrigger: { trigger: '#mfTxt', start: 'top 78%', end: 'bottom 45%', scrub: true }
-    });
-    $$('.pill').forEach(p => gsap.to(p, {
-      scale: 1, ease: 'back.out(1.6)', duration: .8,
-      scrollTrigger: { trigger: p, start: 'top 72%', toggleActions: 'play none none reverse' }
-    }));
+    /* ---- LE GESTE ---- */
+    initGeste();
     $$('[data-count]').forEach(el => {
       const to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), o = { v: 0 };
       gsap.to(o, { v: to, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%' },
@@ -250,36 +260,192 @@
     /* ---- SIGNATURES : carrousel (flèches, doigt, trackpad, clavier) ---- */
     initSignatures();
 
-    /* ---- GALERIE : parallaxe légère (ordinateur), simple apparition (mobile) ---- */
-    mm.add('(min-width:900px)', () => {
-      $$('.gl__col').forEach(c => gsap.to(c, {
-        yPercent: parseFloat(c.dataset.speed) * 60, ease: 'none',
-        scrollTrigger: { trigger: '.gl__cols', start: 'top bottom', end: 'bottom top', scrub: true }
-      }));
-    });
-    $$('.ph').forEach(ph => gsap.from(ph, { autoAlpha: 0, y: 40, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: ph, start: 'top 92%' } }));
+    /* ---- SUR LA PLAQUE : stories ---- */
+    initStories();
 
-    /* ---- AVIS : empilement en CSS (sticky), aucune animation au scroll ---- */
-    gsap.from('.av__score b', { yPercent: 40, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.av__score', start: 'top 85%' } });
+    /* ---- AVIS ---- */
+    initReviews();
 
     /* ---- VENIR ---- */
     gsap.to('.vn__img', { clipPath: 'inset(0 0 0% 0 round 20px)', duration: 1.6, ease: 'expo.inOut', scrollTrigger: { trigger: '.vn__img', start: 'top 85%' } });
     gsap.from('.vn__street', { yPercent: 30, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.vn__street', start: 'top 88%' } });
     gsap.from('.hours tr', { autoAlpha: 0, x: -20, stagger: .05, duration: .8, scrollTrigger: { trigger: '.hours', start: 'top 85%' } });
 
-    /* ---- FOOTER : le logo se ré-assemble ---- */
-    const ft = gsap.timeline({ defaults: { duration: 1.1, ease: 'expo.out' }, scrollTrigger: { trigger: '#ftLogo', start: 'top 85%' } });
-    ft.from('.f-top', { yPercent: -60, autoAlpha: 0 }, 0)
-      .from('.f-bot', { yPercent: 60, autoAlpha: 0 }, .08)
-      .from('.f-word', { yPercent: 30, autoAlpha: 0 }, .04)
-      .from('.f-reg', { scale: 0, ease: 'back.out(2)', duration: .6 }, .5);
-    gsap.from('.ft__order', { yPercent: 50, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.ft__cta', start: 'top 85%' } });
+    /* ---- FOOTER : on soulève le bun du logo, le steak apparaît ---- */
+    const ft = gsap.timeline({ scrollTrigger: { trigger: '#ftLogo', start: 'top 80%' } });
+    ft.from('.f-word', { yPercent: 40, autoAlpha: 0, duration: 1, ease: 'expo.out' })
+      .from('.f-bot', { yPercent: 50, autoAlpha: 0, duration: 1, ease: 'expo.out' }, '<.05')
+      .from('.f-top', { yPercent: -50, autoAlpha: 0, duration: 1, ease: 'expo.out' }, '<.05')
+      .from('.f-reg', { scale: 0, duration: .6, ease: 'back.out(2)' }, '-=.5')
+      .to('.f-top', { rotation: -14, yPercent: -26, duration: .7, ease: 'back.out(1.6)' }, '+=.25')
+      .fromTo('#ftPeek', { autoAlpha: 0, yPercent: 30, scale: .8 }, { autoAlpha: 1, yPercent: 0, scale: 1, duration: .7, ease: 'back.out(1.6)' }, '<.1')
+      .to('.f-top', { rotation: 0, yPercent: 0, duration: .8, ease: 'bounce.out' }, '+=1')
+      .to('#ftPeek', { autoAlpha: 0, yPercent: 10, duration: .3 }, '<');
+    $('#ftLogo').addEventListener('click', () => { if (!ft.isActive()) ft.play(ft.duration() - 2.15); });
+    gsap.from('.ft__row', { y: 30, autoAlpha: 0, stagger: .07, duration: .9, ease: 'expo.out', scrollTrigger: { trigger: '.ft__links', start: 'top 88%' } });
+    paintClock(); setInterval(paintClock, 30000);
 
     /* ---- Classiques : entrée ---- */
     initBuilder();
 
     ScrollTrigger.refresh();
   }
+  /* =========================================================
+     LE GESTE : maintiens pour smasher
+  ========================================================= */
+  function initGeste() {
+    const stage = $('#gsStage'), ball = $('#gsBall'), patty = $('#gsPatty'), press = $('#gsPress'), btn = $('#gsBtn');
+    const ring = $('#gsRing'), val = $('#gsVal'), steps = $$('.gs__steps li'), sparks = $('#gsSparks');
+    const st = { p: 0 }; let holding = false, done = false, used = false, raf = 0, last = 0;
+    const C = 289;
+    function render() {
+      const p = st.p, sh = stage.offsetHeight;
+      const k = Math.min(1, p / .78);                 // écrasement de la boule
+      const m = Math.max(0, (p - .62) / .38);         // fondu vers le steak
+      gsap.set(ball, { scaleY: 1 - .62 * k, scaleX: 1 + .5 * k, autoAlpha: 1 - m });
+      gsap.set(patty, { scaleX: .55 + .45 * m, scaleY: .35 + .65 * m, autoAlpha: m });
+      // la presse descend jusqu'au sommet de la boule
+      const ballTop = ball.offsetTop + ball.offsetHeight * (.62 * k);
+      const contact = Math.max(ballTop, patty.offsetTop + patty.offsetHeight * .38) - press.offsetHeight + 4;
+      const rest = -press.offsetHeight * .15;
+      const y = p === 0 ? rest : rest + (contact - rest) * Math.min(1, p * 4);
+      gsap.set(press, { y });
+      ring.style.strokeDashoffset = C * (1 - p);
+      val.textContent = Math.round(p * 100);
+      stage.style.setProperty('--heat', (.35 + .65 * p).toFixed(2));
+      steps.forEach(li => li.classList.toggle('is-on', p >= parseFloat(li.dataset.at) - .001 && (p > 0 || li.dataset.at === '0')));
+    }
+    function burst() {
+      const r = stage.getBoundingClientRect(), pr = patty.getBoundingClientRect();
+      for (let i = 0; i < 22; i++) {
+        const s = document.createElement('span'); const side = i % 2 ? 1 : -1;
+        s.style.left = (side > 0 ? pr.right - r.left - 30 : pr.left - r.left + 30) + 'px'; s.style.top = (pr.top - r.top + pr.height * .5) + 'px';
+        s.style.background = ['#FFB71B', '#E9852C', '#5A2A14'][i % 3]; sparks.appendChild(s);
+        gsap.to(s, { x: side * (30 + Math.random() * 120), y: -40 - Math.random() * 100, rotation: side * 260, duration: .45, ease: 'power2.out' });
+        gsap.to(s, { y: '+=200', autoAlpha: 0, delay: .42, duration: .7, ease: 'power2.in', onComplete: () => s.remove() });
+      }
+      gsap.fromTo(stage, { x: -4 }, { x: 0, duration: .4, ease: 'elastic.out(1,.3)' });
+      if (navigator.vibrate) try { navigator.vibrate([12, 30, 18]); } catch (e) {}
+    }
+    function finish() {
+      done = true; holding = false; stage.classList.add('is-smashed'); burst();
+      gsap.to(press, { y: -press.offsetHeight * .15, duration: .6, ease: 'back.out(1.6)', delay: .15 });
+      gsap.fromTo(patty, { scaleY: .9 }, { scaleY: 1, duration: .8, ease: 'elastic.out(1,.4)' });
+      $('#gsBtnTxt').textContent = 'Smashé'; $('#gsBtnSub').textContent = 'toucher pour refaire';
+      btn.classList.remove('is-down');
+    }
+    function reset() {
+      done = false; stage.classList.remove('is-smashed');
+      gsap.to(st, { p: 0, duration: .7, ease: 'elastic.out(1,.5)', onUpdate: render });
+      $('#gsBtnTxt').textContent = 'Maintiens'; $('#gsBtnSub').textContent = 'pour smasher';
+    }
+    function loop(t) {
+      const dt = Math.min(50, t - (last || t)); last = t;
+      if (holding && !done) { st.p = Math.min(1, st.p + dt / 1300); if (st.p >= 1) { render(); finish(); } }
+      else if (!holding && !done && st.p > 0) st.p = Math.max(0, st.p - dt / 500);
+      render();
+      if (holding || (!done && st.p > 0)) raf = requestAnimationFrame(loop); else { raf = 0; last = 0; }
+    }
+    const kick = () => { if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
+    const down = e => { e.preventDefault(); used = true; btn.classList.add('is-used', 'is-down'); if (done) { reset(); return; } holding = true; gsap.killTweensOf(st); kick(); };
+    const up = () => { holding = false; btn.classList.remove('is-down'); kick(); };
+    btn.addEventListener('pointerdown', down);
+    addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    btn.addEventListener('contextmenu', e => e.preventDefault());
+    btn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); down(e); } });
+    btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') up(); });
+    render();
+    ScrollTrigger.create({ trigger: '.gs', start: 'top bottom', end: 'bottom top', onToggle: s => $('.gs').classList.toggle('is-vis', s.isActive) });
+    // démo automatique une fois, si personne n'a touché
+    ScrollTrigger.create({ trigger: stage, start: 'top 55%', once: true, onEnter: () => {
+      setTimeout(() => { if (used || done) return; gsap.to(st, { p: 1, duration: 1.6, ease: 'power2.in', onUpdate: render, onComplete: () => { if (!done) finish(); } }); }, 900);
+    } });
+    gsap.from([ball, press], { y: -60, autoAlpha: 0, duration: 1, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: stage, start: 'top 85%' } });
+  }
+
+  /* =========================================================
+     SUR LA PLAQUE : stories (auto, tap gauche/droite, maintien = pause)
+  ========================================================= */
+  function initStories() {
+    const card = $('#story'), slides = $$('.st__slide', card), bars = $$('.st__bars b', card), bgs = $$('.st__bg img');
+    const cap = $('#stCap'), ago = $('#stAgo'); const n = slides.length, DUR = 5;
+    let i = 0, inView = false, paused = false, held = false;
+    let prog = gsap.to({}, {});
+    function show(k, dir = 1) {
+      i = (k + n) % n;
+      slides.forEach((s, j) => s.classList.toggle('is-on', j === i));
+      bgs.forEach((b, j) => b.classList.toggle('is-on', j === i));
+      bars.forEach((b, j) => gsap.set(b, { scaleX: j < i ? 1 : 0 }));
+      cap.textContent = slides[i].dataset.cap; ago.textContent = slides[i].dataset.ago;
+      gsap.fromTo(cap, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: 'expo.out' });
+      gsap.fromTo($('img', slides[i]), { scale: 1.12, xPercent: dir * 2 }, { scale: 1, xPercent: 0, duration: DUR + .5, ease: 'none' });
+      prog.kill();
+      prog = gsap.fromTo(bars[i], { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: 'none', paused: !inView || paused || held, onComplete: () => show(i + 1) });
+    }
+    const sync = () => { const run = inView && !paused && !held; run ? prog.resume() : prog.pause(); card.classList.toggle('is-paused', paused); };
+    $('#stNext').addEventListener('click', () => show(i + 1, 1));
+    $('#stPrev').addEventListener('click', () => show(i - 1, -1));
+    $('#stPause').addEventListener('click', e => { e.stopPropagation(); paused = !paused; $('#stPause').setAttribute('aria-label', paused ? 'Lecture' : 'Pause'); sync(); });
+    let t0 = 0, hold = 0;
+    card.addEventListener('pointerdown', () => { t0 = Date.now(); hold = setTimeout(() => { held = true; sync(); }, 220); });
+    const rel = e => { clearTimeout(hold); if (held) { held = false; sync(); e && e.preventDefault(); } };
+    card.addEventListener('pointerup', rel); card.addEventListener('pointerleave', () => { clearTimeout(hold); if (held) { held = false; sync(); } });
+    // un appui long ne doit pas déclencher le changement de photo
+    ['stNext', 'stPrev'].forEach(id => $('#' + id).addEventListener('click', e => { if (Date.now() - t0 > 220) { e.stopImmediatePropagation(); } }, true));
+    // swipe
+    let sx = null;
+    card.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+    card.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); });
+    card.addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(i + 1); if (e.key === 'ArrowLeft') show(i - 1, -1); });
+    ScrollTrigger.create({ trigger: card, start: 'top 85%', end: 'bottom 15%', onToggle: s => { inView = s.isActive; sync(); } });
+    show(0);
+    gsap.from(card, { y: 80, rotation: 4, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: card, start: 'top 90%' } });
+  }
+
+  /* =========================================================
+     AVIS : citation plein cadre, auto, initiales cliquables
+  ========================================================= */
+  function initReviews() {
+    const qs = $$('.aq'), dots = $$('#avDots button'), stage = $('#avStage'); const n = qs.length, DUR = 6.5;
+    const lines = qs.map(q => new SplitText($('p', q), { type: 'lines', linesClass: 'line' }));
+    lines.forEach(sp => sp.lines.forEach(l => { const w = document.createElement('span'); w.style.display = 'block'; while (l.firstChild) w.appendChild(l.firstChild); l.appendChild(w); }));
+    let i = 0, inView = false, timer = gsap.to({}, {});
+    function show(k) {
+      const prev = qs[i]; i = (k + n) % n; const q = qs[i];
+      if (prev !== q) { prev.classList.remove('is-on'); }
+      q.classList.add('is-on');
+      dots.forEach((d, j) => { d.classList.toggle('is-on', j === i); gsap.set($('circle', d), { strokeDashoffset: 100.6 }); });
+      gsap.fromTo($$('.line > span', q), { yPercent: 105 }, { yPercent: 0, duration: 1, stagger: .07, ease: 'expo.out' });
+      gsap.fromTo($('footer', q), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .8, delay: .25, ease: 'expo.out' });
+      gsap.fromTo($$('mark', q), { '--u': '0%' }, { '--u': '100%', duration: .8, delay: .6, ease: 'expo.inOut' });
+      gsap.fromTo('.av__q', { rotation: -8, scale: .8 }, { rotation: 0, scale: 1, duration: .9, ease: 'expo.out' });
+      timer.kill();
+      timer = gsap.fromTo($('circle', dots[i]), { strokeDashoffset: 100.6 }, { strokeDashoffset: 0, duration: DUR, ease: 'none', paused: !inView, onComplete: () => show(i + 1) });
+    }
+    dots.forEach((d, j) => d.addEventListener('click', () => show(j)));
+    let sx = null;
+    stage.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+    stage.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
+    ScrollTrigger.create({ trigger: stage, start: 'top 80%', end: 'bottom 10%', onToggle: s => { inView = s.isActive; inView ? timer.resume() : timer.pause(); } });
+    ScrollTrigger.create({ trigger: '.av__dist', start: 'top 85%', once: true, onEnter: () => $('.av__dist').classList.add('in') });
+    const o = { v: 0 };
+    gsap.to(o, { v: 4.8, duration: 1.6, ease: 'power3.out', scrollTrigger: { trigger: '.av__big', start: 'top 85%' }, onUpdate: () => $('#avNum').textContent = o.v.toFixed(1).replace('.', ',') });
+    gsap.from('.av__stars', { autoAlpha: 0, x: -20, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.av__big', start: 'top 85%' } });
+    show(0);
+  }
+
+  /* horloge du pied de page : "ferme dans 3 h 12" / "ouvre dans 40 min" */
+  function paintClock() {
+    const { day, min } = now(), prev = (day + 6) % 7;
+    const rs = [...H[day], ...H[prev].map(r => [r[0] - 1440, r[1] - 1440])];
+    const cur = rs.find(r => min >= r[0] && min < r[1]);
+    const dur = m => { const h = Math.floor(m / 60), mm = m % 60; return (h ? h + ' h ' : '') + (h ? String(mm).padStart(2, '0') : mm + ' min'); };
+    let t;
+    if (cur) t = 'Ferme dans ' + dur(cur[1] - min);
+    else { const nx = H[day].map(r => r[0]).find(s => s > min); t = nx != null ? 'Ouvre dans ' + dur(nx - min) : 'Ouvre demain à ' + fmt(H[(day + 1) % 7][0][0]); }
+    $('#ftClock').textContent = t;
+  }
+
   function initSignatures() {
     const track = $('#sgTrack'), slides = $$('.sl', track), n = slides.length;
     const prev = $('#sgPrev'), next = $('#sgNext');

@@ -12,7 +12,7 @@
 <link rel="icon" href="img/favicon.png">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/serif-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=8ca87aea">
+<link rel="stylesheet" href="css/style.css?v=41e84b48">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Restaurant","name":"BUNZO — Smash Burger","servesCuisine":["Burgers","Smash burger"],"priceRange":"10–20 €",
 "address":{"@type":"PostalAddress","streetAddress":"12 rue Louis Blanc","postalCode":"44200","addressLocality":"Nantes","addressCountry":"FR"},
@@ -32,15 +32,18 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><span></span></div>
 
-<!-- ================= LOADER ================= -->
+<!-- ================= LOADER : le bun s'ouvre sur le site ================= -->
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="loader__top mono"><span>BUNZO®</span><span>Nantes · 44200</span></div>
-  <div class="loader__mid">
-    <svg class="loader__logo" viewBox="0 0 1212 882"><use href="#lg-top"/><use href="#lg-word"/><use href="#lg-bot"/></svg>
+  <div class="loader__bg" id="ldBg"></div>
+  <div class="loader__top mono"><span>BUNZO® Smash Burger</span><span>Nantes · 44200</span></div>
+  <div class="loader__bun" id="ldBun">
+    <img class="ld-bot" src="img/l-bottom.webp" alt="">
+    <img class="ld-pat" src="img/l-patty1.webp" alt="">
+    <img class="ld-top" src="img/l-top.webp" alt="">
   </div>
-  <div class="loader__bot">
-    <span class="loader__label mono">Préchauffage de la plaque</span>
-    <span class="loader__count mono"><b id="ldNum">000</b>°</span>
+  <div class="loader__bot mono">
+    <span class="loader__txt"><span id="ldTxt">On chauffe la plaque</span></span>
+    <span class="loader__num"><b id="ldNum">0</b>%</span>
   </div>
   <div class="loader__bar"><i id="ldBar"></i></div>
 </div>
@@ -114,16 +117,40 @@
   </div>
 </section>
 
-<!-- ================= MANIFESTE ================= -->
-<section class="mf" id="manifeste">
-  <p class="kicker mono">Le geste</p>
-  <p class="mf__txt" id="mfTxt">
-    Bœuf frais français, haché maison.
-    <span class="pill"><img src="img/ig-boeuf.webp" alt="La boule de bœuf frais" loading="lazy"></span>
-    Une boule. Une plaque brûlante. Un coup sec.
-    <span class="pill pill--wide"><img src="img/ig-smash.webp" alt="Le steak pressé sur la plancha" loading="lazy"></span>
-    La croûte caramélisée fait le reste.
-  </p>
+<!-- ================= LE GESTE (interactif) ================= -->
+<section class="gs" id="manifeste">
+  <div class="gs__head">
+    <p class="kicker mono">Le geste</p>
+    <h2 class="h2"><span class="clip"><span data-split>Une boule.</span></span><br><span class="clip"><span data-split>Un coup sec.</span></span><br><span class="clip"><span data-split class="serif">C'est tout.</span></span></h2>
+  </div>
+
+  <div class="gs__stage" id="gsStage">
+    <div class="gs__plate" aria-hidden="true"><i></i></div>
+    <div class="gs__steam" aria-hidden="true"><i></i><i></i><i></i></div>
+    <img class="gs__patty" id="gsPatty" src="img/geste-patty.webp" alt="Steak smashé, croûte caramélisée et cheddar fondu">
+    <img class="gs__ball" id="gsBall" src="img/geste-ball.webp" alt="Boule de bœuf frais haché maison">
+    <div class="gs__press" id="gsPress" aria-hidden="true"><span class="gs__grip"></span><span class="gs__neck"></span><span class="gs__plateau"><svg viewBox="0 0 1212 882"><use href="#lg-word"/></svg></span></div>
+    <div class="gs__sparks" id="gsSparks" aria-hidden="true"></div>
+    <p class="gs__state mono" id="gsState"><i></i><span>Plaque brûlante</span></p>
+  </div>
+
+  <div class="gs__ctrl">
+    <button class="gs__btn" id="gsBtn" type="button" aria-describedby="gsHelp">
+      <svg class="gs__ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46"/><circle id="gsRing" cx="50" cy="50" r="46"/></svg>
+      <span class="gs__btn-in"><b id="gsBtnTxt">Maintiens</b><span class="mono" id="gsBtnSub">pour smasher</span></span>
+    </button>
+    <div class="gs__gauge">
+      <p class="mono" id="gsHelp">Appuie et garde le doigt sur le bouton.</p>
+      <p class="gs__pct"><b id="gsVal">0</b><span class="mono">% de pression</span></p>
+    </div>
+  </div>
+
+  <ol class="gs__steps">
+    <li data-at="0"><span class="mono">01</span><b>La boule</b><p>Bœuf frais français, haché maison chaque jour.</p></li>
+    <li data-at=".5"><span class="mono">02</span><b>Le smash</b><p>Écrasée d'un coup sec sur la plaque brûlante.</p></li>
+    <li data-at="1"><span class="mono">03</span><b>La croûte</b><p>Bords dentelés, caramélisés. Cheddar fondu par-dessus.</p></li>
+  </ol>
+
   <div class="mf__stats">
     <div><b class="mono" data-count="100">0</b><span>% bœuf frais<br>français</span></div>
     <div><b class="mono" data-count="7">0</b><span>jours sur 7,<br>jusqu'à 2h</span></div>
@@ -276,38 +303,51 @@
   <p class="ct__legal mono">Prix en euros TTC · Titres-restaurant acceptés · Halal</p>
 </section>
 
-<!-- ================= SUR LA PLAQUE (photos réelles) ================= -->
-<section class="gl" id="galerie">
-  <div class="gl__head">
-    <p class="kicker mono">Sur la plaque</p>
-    <h2 class="h2"><span class="clip"><span data-split>Rue</span></span> <span class="clip"><span data-split>Louis-Blanc,</span></span> <span class="clip"><span data-split class="serif">tous les soirs.</span></span></h2>
-  </div>
-  <div class="gl__cols">
-    <div class="gl__col" data-speed="-0.12">
-      <figure class="ph"><img src="img/ig-melt.webp" alt="Le smash pressé à la main" loading="lazy"></figure>
-      <figure class="ph"><img src="img/ig-damier.webp" alt="Smash burgers et waffle fries sur papier damier" loading="lazy"></figure>
-      <figure class="ph"><img src="img/ig-stack.webp" alt="Burger raclette et charcuterie" loading="lazy"></figure>
+<!-- ================= SUR LA PLAQUE : stories ================= -->
+<section class="st" id="galerie">
+  <div class="st__bg" aria-hidden="true"><img class="is-on" src="img/bl-ig-melt.jpg" alt="" loading="lazy"><img class="" src="img/bl-ig-cheddar.jpg" alt="" loading="lazy"><img class="" src="img/bl-ig-damier.jpg" alt="" loading="lazy"><img class="" src="img/bl-ig-stack.jpg" alt="" loading="lazy"><img class="" src="img/bl-ig-table.jpg" alt="" loading="lazy"><img class="" src="img/bl-ig-salle.jpg" alt="" loading="lazy"></div>
+  <div class="st__inner">
+    <div class="st__head">
+      <p class="kicker mono">Sur la plaque</p>
+      <h2 class="h2"><span class="clip"><span data-split>En direct</span></span><br><span class="clip"><span data-split>de la rue</span></span><br><span class="clip"><span data-split class="serif">Louis-Blanc.</span></span></h2>
+      <p class="st__lead">Ce qui sort de la plaque, tous les jours, sur notre Instagram.</p>
+      <a class="btn btn--ch st__follow" data-magnetic href="https://www.instagram.com/bunzo.fr/" target="_blank" rel="noopener"><span>Suivre @bunzo.fr</span></a>
     </div>
-    <div class="gl__col" data-speed="0.12">
-      <figure class="ph"><img src="img/ig-cheddar.webp" alt="Cheddar fondu versé sur les frites" loading="lazy"></figure>
-      <figure class="ph"><img src="img/ig-salle.webp" alt="La salle BUNZO" loading="lazy"></figure>
-      <figure class="ph"><img src="img/ig-table.webp" alt="Une table BUNZO" loading="lazy"></figure>
+    <div class="st__card" id="story" role="region" aria-roledescription="carrousel" aria-label="Photos BUNZO">
+      <div class="st__bars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="st__user"><span class="st__av"><svg viewBox="0 0 1212 882"><use href="#lg-top"/><use href="#lg-word"/><use href="#lg-bot"/></svg></span><b>bunzo.fr</b><span class="mono" id="stAgo">il y a 2 h</span><button class="st__pause" id="stPause" type="button" aria-label="Pause"><i></i><i></i></button></div>
+      <div class="st__media"><figure class="st__slide is-on" data-cap="Le smash, pressé à la main." data-ago="il y a 2 h"><img src="img/ig-melt.webp" alt="" ></figure><figure class="st__slide" data-cap="Cheddar fondu. Sans modération." data-ago="il y a 5 h"><img src="img/ig-cheddar.webp" alt="" loading="lazy"></figure><figure class="st__slide" data-cap="Waffle fries &amp; papier damier." data-ago="hier"><img src="img/ig-damier.webp" alt="" loading="lazy"></figure><figure class="st__slide" data-cap="Le Braisé : raclette, pommes paille, charcuterie." data-ago="il y a 2 j"><img src="img/ig-stack.webp" alt="" loading="lazy"></figure><figure class="st__slide" data-cap="Un vendredi soir, rue Louis-Blanc." data-ago="il y a 3 j"><img src="img/ig-table.webp" alt="" loading="lazy"></figure><figure class="st__slide" data-cap="Ouvert 7j/7 jusqu’à 2h." data-ago="il y a 4 j"><img src="img/ig-salle.webp" alt="" loading="lazy"></figure></div>
+      <p class="st__cap" id="stCap">Le smash, pressé à la main.</p>
+      <button class="st__nav st__nav--prev" id="stPrev" type="button" aria-label="Photo précédente"></button>
+      <button class="st__nav st__nav--next" id="stNext" type="button" aria-label="Photo suivante"></button>
     </div>
   </div>
-  <a class="gl__ig" href="https://www.instagram.com/bunzo.fr/" target="_blank" rel="noopener"><span class="mono">Suivre</span><b>@bunzo.fr</b><i>↗</i></a>
 </section>
 
 <!-- ================= AVIS ================= -->
 <section class="av" id="avis">
-  <div class="av__head">
+  <div class="av__top">
     <p class="kicker mono">Ce qu'en dit Nantes</p>
-    <p class="av__score"><b>4,8</b><span class="mono">/5 · 3 488 avis Google<br>4,5/5 sur Uber Eats</span></p>
+    <div class="av__score">
+      <p class="av__big"><b id="avNum">4,8</b><span class="av__stars" aria-hidden="true">★★★★★</span></p>
+      <div class="av__dist">
+        <p class="mono av__count"><b>3 488</b> avis Google · 4,5 sur Uber Eats</p>
+        <ul>
+          <li><span class="mono">5</span><i><b style="--w:.848"></b></i><span class="mono">2 957</span></li>
+          <li><span class="mono">4</span><i><b style="--w:.126"></b></i><span class="mono">440</span></li>
+          <li><span class="mono">3</span><i><b style="--w:.018"></b></i><span class="mono">62</span></li>
+          <li><span class="mono">2</span><i><b style="--w:.004"></b></i><span class="mono">13</span></li>
+          <li><span class="mono">1</span><i><b style="--w:.005"></b></i><span class="mono">16</span></li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="av__cards">
-    <blockquote class="rv"><p>«&nbsp;Pour un fast food qui ferme tard, c'est dur de trouver de la qualité. Là, on trouve tout.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Léa P. · Google</footer></blockquote>
-    <blockquote class="rv"><p>«&nbsp;Le steak façon smashé est excellent, super accueil. Le lieu est très clair et propre.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Christelle B. · Google</footer></blockquote>
-    <blockquote class="rv"><p>«&nbsp;Un burger veggie qui a un vrai goût de burger.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Did I. · Google</footer></blockquote>
+  <div class="av__stage" id="avStage" aria-live="polite">
+    <span class="av__q" aria-hidden="true">“</span>
+    <blockquote class="aq is-on" data-i="0"><p>Les frites très croustillantes et fondantes à l’intérieur, la sauce maison <mark>une dinguerie</mark>, et les smashs sont super bons !</p><footer><span class="aq__av">LD</span><span class="aq__who"><b>Léa D.</b><span class="mono">★★★★★ · il y a 2 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="1"><p>C’est le meilleur burger que j’ai jamais mangé. Le steak est <mark>une masterclass</mark>.</p><footer><span class="aq__av">AK</span><span class="aq__who"><b>Aida K.</b><span class="mono">★★★★★ · il y a 6 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="2"><p>Le smash, le pain, la viande, le fromage : <mark>tout est frais</mark>. Les sauces, c’est un truc de fou.</p><footer><span class="aq__av">NV</span><span class="aq__who"><b>Naïm V.</b><span class="mono">★★★★★ · il y a 7 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="3"><p>Je pousse la porte parce que le local est classe. Mais le burger est <mark>juste incroyable</mark>.</p><footer><span class="aq__av">RN</span><span class="aq__who"><b>Régis N.</b><span class="mono">★★★★★ · il y a 8 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="4"><p><mark>Le meilleur smash de Nantes</mark> ! C’était incroyablement bon !!</p><footer><span class="aq__av">ZN</span><span class="aq__who"><b>Ziyed N.</b><span class="mono">★★★★★ · il y a un mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="5"><p>Pour un fast food qui ferme tard, c’est dur de trouver de la qualité. <mark>Là, on trouve tout.</mark></p><footer><span class="aq__av">LP</span><span class="aq__who"><b>Léa P.</b><span class="mono">★★★★★ · il y a 2 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="6"><p>Carte courte, vraiment bon, différent, servi rapidement. <mark>Allez-y les yeux fermés !</mark></p><footer><span class="aq__av">JR</span><span class="aq__who"><b>Julien R. L.</b><span class="mono">★★★★★ · il y a 7 mois · Google</span></span></footer></blockquote><blockquote class="aq" data-i="7"><p>J’ai adoré <mark>le Braisé à la raclette</mark>, et les frites sont super bonnes, bien croustillantes !</p><footer><span class="aq__av">EC</span><span class="aq__who"><b>E. C.</b><span class="mono">★★★★★ · il y a 9 mois · Google</span></span></footer></blockquote>
   </div>
+  <div class="av__dots" id="avDots"><button type="button" class="is-on" aria-label="Avis 1"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>LD</span></button><button type="button" class="" aria-label="Avis 2"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>AK</span></button><button type="button" class="" aria-label="Avis 3"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>NV</span></button><button type="button" class="" aria-label="Avis 4"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>RN</span></button><button type="button" class="" aria-label="Avis 5"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>ZN</span></button><button type="button" class="" aria-label="Avis 6"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>LP</span></button><button type="button" class="" aria-label="Avis 7"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>JR</span></button><button type="button" class="" aria-label="Avis 8"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16"/></svg><span>EC</span></button></div>
+  <a class="av__all mono" href="https://www.google.com/maps/place/BUNZO+-+Smash+Burger/@47.2067671,-1.5551597,17z/data=!4m8!3m7!1s0x4805ef0045a1fffd:0x22c6907e824c6683!8m2!3d47.2067671!4d-1.5551597!9m1!1b1" target="_blank" rel="noopener">Lire les 3 488 avis ↗</a>
 </section>
 
 <!-- ================= VENIR ================= -->
@@ -349,10 +389,21 @@
 
 <!-- ================= FOOTER ================= -->
 <footer class="ft" id="ft">
-  <div class="ft__cta">
-    <p class="serif">Une petite faim&nbsp;?</p>
-    <a class="ft__order" data-magnetic href="https://www.ubereats.com/fr/store/bunzo/ALblyguCWyKL4ua7zqPsfQ" target="_blank" rel="noopener"><span>Commander</span><i>↗</i></a>
+  <div class="ft__head">
+    <p class="ft__hello"><span class="clip"><span data-split>À tout</span></span><br><span class="clip"><span data-split>à l'heure,</span></span><br><span class="clip"><span data-split class="serif">rue Louis-Blanc.</span></span></p>
+    <div class="ft__live">
+      <p class="status mono"><i></i><span data-status></span></p>
+      <p class="ft__clock mono" id="ftClock">—</p>
+    </div>
   </div>
+
+  <nav class="ft__links" aria-label="Contact">
+    <a href="https://www.ubereats.com/fr/store/bunzo/ALblyguCWyKL4ua7zqPsfQ" target="_blank" rel="noopener" class="ft__row ft__row--main"><span class="mono">01</span><b>Commander</b><em class="mono">Uber Eats</em><i>↗</i></a>
+    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=BUNZO%20Smash%20Burger%2012%20Rue%20Louis%20Blanc%2044200%20Nantes" target="_blank" rel="noopener" class="ft__row"><span class="mono">02</span><b>Itinéraire</b><em class="mono">12 rue Louis-Blanc</em><i>↗</i></a>
+    <a href="tel:+33236661644" class="ft__row"><span class="mono">03</span><b>Appeler</b><em class="mono">02 36 66 16 44</em><i>↗</i></a>
+    <a href="https://www.instagram.com/bunzo.fr/" target="_blank" rel="noopener" class="ft__row"><span class="mono">04</span><b>Instagram</b><em class="mono">@bunzo.fr</em><i>↗</i></a>
+  </nav>
+
   <div class="ft__logo" id="ftLogo">
     <svg viewBox="0 0 1212 882" aria-label="BUNZO">
       <g class="f-top"><use href="#lg-top"/></g>
@@ -360,9 +411,11 @@
       <g class="f-reg"><use href="#lg-reg"/></g>
       <g class="f-bot"><use href="#lg-bot"/></g>
     </svg>
+    <img class="ft__peek" id="ftPeek" src="img/l-patty1.webp" alt="" aria-hidden="true">
   </div>
-  <div class="ft__row mono">
-    <span>© <span id="yr">2026</span> BUNZO® Smash Burger</span>
+
+  <div class="ft__row2 mono">
+    <span>© <span id="yr">2026</span> BUNZO® Smash Burger · Nantes</span>
     <button type="button" id="legalBtn">Mentions légales</button>
     <a href="https://vokumagency.com" target="_blank" rel="noopener">Site par Vokum</a>
   </div>
@@ -389,6 +442,6 @@
 <script src="js/vendor/ScrollTrigger.min.js?v=2e3b8c36"></script>
 <script src="js/vendor/SplitText.min.js?v=6631fa05"></script>
 <script src="js/vendor/lenis.min.js?v=5a44a112"></script>
-<script src="js/main.js?v=60aabbdf"></script>
+<script src="js/main.js?v=c293f99e"></script>
 </body>
 </html>
