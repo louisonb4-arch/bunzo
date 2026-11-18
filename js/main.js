@@ -247,33 +247,8 @@
         onUpdate: () => el.textContent = o.v.toFixed(dec).replace('.', ',') });
     });
 
-    /* ---- SIGNATURES ---- */
-    const track = $('#sgTrack'), slides = $$('.sl', track);
-    gsap.set('.sl__img', { xPercent: -50, yPercent: -50 });
-    const setCount = p => {
-      const i = Math.min(slides.length - 1, Math.round(p * (slides.length - 1)));
-      $('#sgNum').textContent = '0' + (i + 1);
-      gsap.set('#sgBar', { scaleX: (p * (slides.length - 1) + 1) / slides.length });
-    };
-    mm.add('(min-width:900px)', () => {
-      // ordinateur : défilement horizontal épinglé, sobre
-      const hz = gsap.to(track, {
-        x: () => -(track.scrollWidth - innerWidth), ease: 'none',
-        scrollTrigger: {
-          trigger: '.sg', pin: '.sg__pin', start: 'top top', end: () => '+=' + (track.scrollWidth - innerWidth),
-          scrub: true, invalidateOnRefresh: true, anticipatePin: 1, onUpdate: s => setCount(s.progress)
-        }
-      });
-      slides.forEach(sl => gsap.fromTo($('.sl__img', sl), { scale: .86 }, { scale: 1, ease: 'none',
-        scrollTrigger: { containerAnimation: hz, trigger: sl, start: 'left right', end: 'left left', scrub: true } }));
-    });
-    mm.add('(max-width:899px)', () => {
-      // mobile : carrousel natif au doigt (aucun scroll détourné)
-      const onS = () => setCount(track.scrollLeft / Math.max(1, track.scrollWidth - track.clientWidth));
-      track.addEventListener('scroll', onS, { passive: true }); onS();
-      gsap.from('.sl:first-child .sl__img', { scale: .85, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.sg', start: 'top 70%' } });
-      return () => track.removeEventListener('scroll', onS);
-    });
+    /* ---- SIGNATURES : carrousel (flèches, doigt, trackpad, clavier) ---- */
+    initSignatures();
 
     /* ---- GALERIE : parallaxe légère (ordinateur), simple apparition (mobile) ---- */
     mm.add('(min-width:900px)', () => {
@@ -304,6 +279,41 @@
     initBuilder();
 
     ScrollTrigger.refresh();
+  }
+  function initSignatures() {
+    const track = $('#sgTrack'), slides = $$('.sl', track), n = slides.length;
+    const prev = $('#sgPrev'), next = $('#sgNext');
+    gsap.set('.sl__img', { xPercent: -50, yPercent: -50 });
+    let cur = 0;
+    const idx = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    const go = i => {
+      i = Math.max(0, Math.min(n - 1, i));
+      track.scrollTo({ left: i * track.clientWidth, behavior: RM ? 'auto' : 'smooth' });
+    };
+    function enter(i, dir) {
+      const sl = slides[i];
+      gsap.fromTo($('.sl__img', sl), { scale: .86, rotation: 8 * dir }, { scale: 1, rotation: 0, duration: 1, ease: 'expo.out', overwrite: 'auto' });
+      gsap.fromTo($('.sl__info', sl).children, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .05, ease: 'expo.out', overwrite: 'auto' });
+      gsap.fromTo($('.sl__name', sl), { xPercent: 8 * dir }, { xPercent: 0, duration: 1.2, ease: 'expo.out', overwrite: 'auto' });
+    }
+    function update() {
+      const p = track.scrollLeft / Math.max(1, track.scrollWidth - track.clientWidth);
+      gsap.set('#sgBar', { scaleX: (p * (n - 1) + 1) / n });
+      const i = idx();
+      prev.disabled = i <= 0; next.disabled = i >= n - 1;
+      if (i !== cur) { const dir = i > cur ? 1 : -1; cur = i; $('#sgNum').textContent = '0' + (i + 1); if (!RM) enter(i, dir); }
+    }
+    prev.addEventListener('click', () => go(cur - 1));
+    next.addEventListener('click', () => go(cur + 1));
+    track.addEventListener('scroll', update, { passive: true });
+    track.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    });
+    addEventListener('resize', () => track.scrollTo({ left: cur * track.clientWidth }));
+    update();
+    // entrée de la première signature
+    if (!RM) gsap.from('.sl:first-child .sl__img', { scale: .85, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.sg', start: 'top 70%' } });
   }
   function anatomyPoint() { return hero.offsetTop + innerHeight * 1.05; }
 

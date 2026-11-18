@@ -12,7 +12,7 @@
 <link rel="icon" href="img/favicon.png">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/serif-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=81338c8e">
+<link rel="stylesheet" href="css/style.css?v=8ca87aea">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Restaurant","name":"BUNZO — Smash Burger","servesCuisine":["Burgers","Smash burger"],"priceRange":"10–20 €",
 "address":{"@type":"PostalAddress","streetAddress":"12 rue Louis Blanc","postalCode":"44200","addressLocality":"Nantes","addressCountry":"FR"},
@@ -136,9 +136,13 @@
   <div class="sg__pin">
     <div class="sg__head">
       <p class="kicker mono">Les signatures</p>
-      <p class="sg__count mono"><b id="sgNum">01</b> / 04</p>
+      <div class="sg__nav">
+        <button class="sg__arrow sg__arrow--prev" id="sgPrev" type="button" aria-label="Burger précédent" aria-controls="sgTrack" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <p class="sg__count mono" aria-live="polite"><b id="sgNum">01</b> / 04</p>
+        <button class="sg__arrow" id="sgNext" type="button" aria-label="Burger suivant" aria-controls="sgTrack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
     </div>
-    <div class="sg__track" id="sgTrack">
+    <div class="sg__track" id="sgTrack" tabindex="0" aria-label="Burgers signatures, utilisez les flèches pour naviguer">
       <article class="sl" data-color="#012B1A">
         <h3 class="sl__name" aria-hidden="true"><span>Le</span><span>Braisé</span></h3>
         <img class="sl__img" src="img/sig-braise.webp" alt="Le Braisé" loading="lazy">
@@ -181,7 +185,6 @@
       </article>
     </div>
     <div class="sg__bar"><i id="sgBar"></i></div>
-    <p class="sg__hint mono">Glisse pour voir les 4 →</p>
   </div>
 </section>
 
@@ -386,6 +389,6 @@
 <script src="js/vendor/ScrollTrigger.min.js?v=2e3b8c36"></script>
 <script src="js/vendor/SplitText.min.js?v=6631fa05"></script>
 <script src="js/vendor/lenis.min.js?v=5a44a112"></script>
-<script src="js/main.js?v=a013c3b7"></script>
+<script src="js/main.js?v=60aabbdf"></script>
 </body>
 </html>
