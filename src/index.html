@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BUNZO® — Smash Burger · Nantes</title>
+<meta name="description" content="BUNZO, le smash burger de Nantes. Bœuf frais français haché maison, potato bun brioché, waffle fries. 12 rue Louis-Blanc, Île de Nantes. Ouvert 7j/7 jusqu'à 2h.">
+<meta name="theme-color" content="#012B1A">
+<meta property="og:title" content="BUNZO® — Smash Burger · Nantes">
+<meta property="og:description" content="Sous pression, tout devient meilleur. 12 rue Louis-Blanc, Nantes.">
+<meta property="og:image" content="img/og.jpg">
+<link rel="icon" href="img/favicon.png">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/serif-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"BUNZO — Smash Burger","servesCuisine":["Burgers","Smash burger"],"priceRange":"10–20 €",
+"address":{"@type":"PostalAddress","streetAddress":"12 rue Louis Blanc","postalCode":"44200","addressLocality":"Nantes","addressCountry":"FR"},
+"geo":{"@type":"GeoCoordinates","latitude":47.2067671,"longitude":-1.5551597},"telephone":"+33236661644",
+"openingHoursSpecification":[
+{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"11:30","closes":"14:30"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"18:00","closes":"02:00"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday","Sunday"],"opens":"11:30","closes":"02:00"}],
+"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"3488"},
+"sameAs":["https://www.instagram.com/bunzo.fr/"]}
+</script>
+</head>
+<body class="is-loading">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>{{LOGO}}</defs></svg>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><span></span></div>
+
+<!-- ================= LOADER ================= -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__top mono"><span>BUNZO®</span><span>Nantes · 44200</span></div>
+  <div class="loader__mid">
+    <svg class="loader__logo" viewBox="0 0 1212 882"><use href="#lg-top"/><use href="#lg-word"/><use href="#lg-bot"/></svg>
+  </div>
+  <div class="loader__bot">
+    <span class="loader__label mono">Préchauffage de la plaque</span>
+    <span class="loader__count mono"><b id="ldNum">000</b>°</span>
+  </div>
+  <div class="loader__bar"><i id="ldBar"></i></div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header class="hd" id="hd">
+  <a class="hd__logo" href="#top" aria-label="BUNZO — retour en haut" data-cursor="hide">
+    <svg viewBox="0 0 1212 882"><use href="#lg-top"/><use href="#lg-word"/><use href="#lg-reg"/><use href="#lg-bot"/></svg>
+  </a>
+  <span class="hd__status mono" data-status-short><i></i><span></span></span>
+  <button class="hd__menu mono" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav">
+    <span class="hd__menu-txt"><span>Menu</span><span>Fermer</span></span>
+    <span class="hd__menu-ico"><i></i><i></i></span>
+  </button>
+</header>
+
+<nav class="nav" id="nav" aria-hidden="true">
+  <div class="nav__bg"></div>
+  <div class="nav__inner">
+    <ol class="nav__list">
+      <li><a href="#anatomie"><span class="mono">01</span><b>Le smash</b></a></li>
+      <li><a href="#signatures"><span class="mono">02</span><b>Signatures</b></a></li>
+      <li><a href="#taille"><span class="mono">03</span><b>Les classiques</b></a></li>
+      <li><a href="#carte"><span class="mono">04</span><b>La carte</b></a></li>
+      <li><a href="#venir"><span class="mono">05</span><b>Venir</b></a></li>
+    </ol>
+    <div class="nav__foot">
+      <img class="nav__burger" src="img/sig-pepper.webp" alt="" loading="lazy">
+      <p class="mono">12 rue Louis-Blanc<br>44200 Nantes</p>
+      <p class="mono"><a href="tel:+33236661644">02 36 66 16 44</a><br><a href="https://www.instagram.com/bunzo.fr/" target="_blank" rel="noopener">Instagram ↗</a></p>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ================= HERO + ANATOMIE (épinglé) ================= -->
+<section class="hero" id="hero">
+  <div class="hero__pin">
+    <div class="hero__glow" aria-hidden="true"></div>
+
+    <h1 class="hero__title" aria-label="Sous pression, tout devient meilleur.">
+      <span class="hero__l1" aria-hidden="true"><span class="clip"><span data-anim>Sous</span></span></span>
+      <span class="hero__l2" aria-hidden="true"><span class="clip"><span data-anim>pression</span></span></span>
+      <span class="hero__l3 serif" aria-hidden="true"><span class="clip"><span data-anim>tout devient meilleur.</span></span></span>
+    </h1>
+
+    <div class="stack" id="stack" aria-hidden="true">
+      <img class="ly ly--bottom" src="img/l-bottom.webp" alt="">
+      <img class="ly ly--p2" src="img/l-patty2.webp" alt="">
+      <img class="ly ly--p1" src="img/l-patty1.webp" alt="">
+      <img class="ly ly--garnish" src="img/l-garnish.webp" alt="">
+      <img class="ly ly--top" src="img/l-top.webp" alt="">
+      <div class="stack__shadow"></div>
+    </div>
+
+    <!-- labels de l'anatomie -->
+    <div class="anat" id="anatomie" aria-label="Anatomie du burger">
+      <p class="anat__kicker mono"><span>L'anatomie</span><span>du smash</span></p>
+      <div class="tag tag--top"><i></i><p><b>Potato bun</b><span class="mono">brioché, toasté, marqué au fer</span></p></div>
+      <div class="tag tag--garnish"><i></i><p><b>Pickles &amp; oignons</b><span class="mono">caramélisés lentement</span></p></div>
+      <div class="tag tag--p1"><i></i><p><b>Smash patty</b><span class="mono">bœuf frais français, haché maison</span></p></div>
+      <div class="tag tag--p2"><i></i><p><b>Premium cheddar</b><span class="mono">fondu sur la plaque</span></p></div>
+      <div class="tag tag--bottom"><i></i><p><b>Sauce Bunzo</b><span class="mono">la recette maison</span></p></div>
+    </div>
+
+    <div class="hero__foot">
+      <p class="hero__rate mono"><span class="stars">★★★★★</span> 4,8 · 3 488 avis</p>
+      <a class="hero__scroll mono" href="#anatomie"><span>Scroll</span><i></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MANIFESTE ================= -->
+<section class="mf" id="manifeste">
+  <p class="kicker mono">Le geste</p>
+  <p class="mf__txt" id="mfTxt">
+    Bœuf frais français, haché maison.
+    <span class="pill"><img src="img/ig-boeuf.webp" alt="La boule de bœuf frais" loading="lazy"></span>
+    Une boule. Une plaque brûlante. Un coup sec.
+    <span class="pill pill--wide"><img src="img/ig-smash.webp" alt="Le steak pressé sur la plancha" loading="lazy"></span>
+    La croûte caramélisée fait le reste.
+  </p>
+  <div class="mf__stats">
+    <div><b class="mono" data-count="100">0</b><span>% bœuf frais<br>français</span></div>
+    <div><b class="mono" data-count="7">0</b><span>jours sur 7,<br>jusqu'à 2h</span></div>
+    <div><b class="mono" data-count="4.8" data-dec="1">0</b><span>sur Google,<br>3 488 avis</span></div>
+  </div>
+</section>
+
+<!-- ================= SIGNATURES (scroll horizontal) ================= -->
+<section class="sg" id="signatures">
+  <div class="sg__pin">
+    <div class="sg__head">
+      <p class="kicker mono">Les signatures</p>
+      <p class="sg__count mono"><b id="sgNum">01</b> / 04</p>
+    </div>
+    <div class="sg__track" id="sgTrack">
+      <article class="sl" data-color="#012B1A">
+        <h3 class="sl__name" aria-hidden="true"><span>Le</span><span>Braisé</span></h3>
+        <img class="sl__img" src="img/sig-braise.webp" alt="Le Braisé" loading="lazy">
+        <div class="sl__info">
+          <p class="sl__tag serif">Le roi de l'hiver.</p>
+          <h3 class="sl__title">Le Braisé</h3>
+          <p class="sl__ing mono">2 steaks smashés · cheddar · raclette · pommes paille · trio de charcuterie · sauce braisée</p>
+          <p class="sl__price"><b>12,00 €</b><span class="mono">En menu 14,50 €</span></p>
+        </div>
+      </article>
+      <article class="sl" data-color="#0A2416">
+        <h3 class="sl__name" aria-hidden="true"><span>Pepper</span><span>Bunz</span></h3>
+        <img class="sl__img" src="img/sig-pepper.webp" alt="Le Pepper Bunz" loading="lazy">
+        <div class="sl__info">
+          <p class="sl__tag serif">Du caractère, du croquant.</p>
+          <h3 class="sl__title">Pepper Bunz</h3>
+          <p class="sl__ing mono">2 steaks smashés · emmental fondant · bacon grillé · oignons caramélisés · sauce aux trois poivres</p>
+          <p class="sl__price"><b>12,00 €</b><span class="mono">En menu 14,50 €</span></p>
+        </div>
+      </article>
+      <article class="sl" data-color="#012B1A">
+        <h3 class="sl__name" aria-hidden="true"><span>Chèvre</span><span>Miel</span></h3>
+        <img class="sl__img" src="img/sig-chevre.webp" alt="Le Chèvre Miel" loading="lazy">
+        <div class="sl__info">
+          <p class="sl__tag serif">Douceur et crémeux.</p>
+          <h3 class="sl__title">Chèvre Miel</h3>
+          <p class="sl__ing mono">Steak smashé · rondelle de chèvre · miel coulant · cheddar · oignons caramélisés</p>
+          <p class="sl__price"><b>12,00 €</b><span class="mono">En menu 14,50 €</span></p>
+        </div>
+      </article>
+      <article class="sl" data-color="#0A2416">
+        <h3 class="sl__name" aria-hidden="true"><span>Garlic</span><span>Chicken</span></h3>
+        <img class="sl__img" src="img/sig-garlic.webp" alt="Le Garlic Chicken" loading="lazy">
+        <div class="sl__info">
+          <p class="sl__tag serif"><em class="new mono">Nouveau</em> La signature poulet.</p>
+          <h3 class="sl__title">Garlic Chicken</h3>
+          <p class="sl__ing mono">Crunchy chicken · cheddar maturé · coleslaw · oignons caramélisés · pickles · garlic sauce</p>
+          <p class="sl__price"><b>Nouveauté</b><span class="mono">À découvrir sur place</span></p>
+        </div>
+      </article>
+    </div>
+    <div class="sg__bar"><i id="sgBar"></i></div>
+  </div>
+</section>
+
+<!-- ================= LES CLASSIQUES : M / L / XL ================= -->
+<section class="sz" id="taille">
+  <div class="sz__head">
+    <p class="kicker mono">Les classiques</p>
+    <h2 class="h2"><span class="clip"><span data-split>Choisis ta</span></span> <span class="clip"><span data-split class="serif">pression.</span></span></h2>
+  </div>
+
+  <div class="sz__stage">
+    <div class="build" id="build" aria-hidden="true">
+      <img class="ly ly--bottom" src="img/l-bottom.webp" alt="">
+      <img class="ly ly--garnish" src="img/l-garnish.webp" alt="">
+      <img class="ly ly--top" src="img/l-top.webp" alt="">
+    </div>
+    <span class="sz__big" id="szBig" aria-hidden="true">L</span>
+  </div>
+
+  <div class="sz__ui">
+    <div class="seg" role="tablist" aria-label="Taille du burger">
+      <button role="tab" aria-selected="false" data-size="M"><b>M</b><span class="mono">1 steak</span></button>
+      <button role="tab" aria-selected="true" data-size="L"><b>L</b><span class="mono">2 steaks</span></button>
+      <button role="tab" aria-selected="false" data-size="XL"><b>XL</b><span class="mono">3 steaks</span></button>
+      <i class="seg__pill" aria-hidden="true"></i>
+    </div>
+    <div class="sz__info" aria-live="polite">
+      <p class="sz__tag serif" id="szTag">Pour un équilibre parfait.</p>
+      <div class="sz__prices">
+        <p><span class="mono">Burger</span><b id="szSolo">10,90 €</b></p>
+        <p class="is-menu"><span class="mono">En menu</span><b id="szMenu">13,50 €</b></p>
+      </div>
+      <p class="sz__desc mono">Potato bun brioché · <span id="szPat">double smashed patty</span> · american cheese · oignons caramélisés · pickles · sauce Bunzo</p>
+      <p class="sz__note mono">Menu = burger + waffle fries + sauce + boisson</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LA CARTE ================= -->
+<section class="ct" id="carte">
+  <div class="ct__head">
+    <p class="kicker mono">La carte complète</p>
+    <h2 class="h2"><span class="clip"><span data-split>Tout</span></span> <span class="clip"><span data-split class="serif">le reste.</span></span></h2>
+  </div>
+
+  <div class="acc" id="acc">
+    <div class="acc__it is-open">
+      <button class="acc__hd" aria-expanded="true"><span class="mono">01</span><b>Burgers</b><i></i></button>
+      <div class="acc__bd"><ul>
+        <li><p><b>Burger M</b><small>1 smash patty · cheddar · oignons · pickles · sauce Bunzo</small></p><em></em><span>9,50</span></li>
+        <li><p><b>Burger L</b><small>2 smash patties</small></p><em></em><span>10,90</span></li>
+        <li><p><b>Burger XL</b><small>3 smash patties</small></p><em></em><span>12,00</span></li>
+        <li><p><b>Le Braisé</b><small>raclette · pommes paille · charcuterie</small></p><em></em><span>12,00</span></li>
+        <li><p><b>Pepper Bunz</b><small>emmental · bacon · sauce trois poivres</small></p><em></em><span>12,00</span></li>
+        <li><p><b>Chèvre Miel</b><small>chèvre · miel · cheddar · oignons</small></p><em></em><span>12,00</span></li>
+        <li><p><b>Poulet</b><small>filet crunchy · cheddar · pickles · sauce chicken</small></p><em></em><span>10,00</span></li>
+        <li><p><b>Veggie</b><small>steak végé · cheddar · oignons · pickles</small></p><em></em><span>9,90</span></li>
+      </ul><p class="acc__note mono">En menu (+ waffle fries, sauce et boisson) : M 11,90 · L 13,50 · XL et signatures 14,50 · Poulet 12,00 · Veggie 11,90</p></div>
+    </div>
+    <div class="acc__it">
+      <button class="acc__hd" aria-expanded="false"><span class="mono">02</span><b>Sides</b><i></i></button>
+      <div class="acc__bd"><div class="acc__fries"><img src="img/fries.webp" alt="Waffle fries au cheddar" loading="lazy"></div><ul>
+        <li><p><b>Waffle fries</b><small>croustillantes et dorées</small></p><em></em><span>3,90</span></li>
+        <li><p><b>Waffle fries cheddar</b><small>nappées de cheddar fondu</small></p><em></em><span>4,50</span></li>
+        <li><p><b>Chick'n cheese</b><small>fries · bouchées de poulet · cheddar maison</small></p><em></em><span>7,50</span></li>
+        <li><p><b>Fries bombe</b><small>fries · steak smashé · oignons · cheddar · sauce</small></p><em></em><span>7,50</span></li>
+      </ul></div>
+    </div>
+    <div class="acc__it">
+      <button class="acc__hd" aria-expanded="false"><span class="mono">03</span><b>Sauces</b><i></i></button>
+      <div class="acc__bd"><ul>
+        <li><p><b>Cheddar bacon XXL</b><small>à partager, pour tremper</small></p><em></em><span>4,90</span></li>
+        <li><p><b>Parmesan truffe XXL</b><small>parmesan affiné, touche de truffe</small></p><em></em><span>4,90</span></li>
+        <li><p><b>Chipotle &amp; jalapeños XXL</b><small>fumée et relevée</small></p><em></em><span>4,90</span></li>
+        <li><p><b>Bunzo braisée</b><small>fumée, goût bacon grillé</small></p><em></em><span>0,65</span></li>
+        <li><p><b>Bunzo piquante sucrée</b><small>maison, légèrement épicée</small></p><em></em><span>0,65</span></li>
+        <li><p><b>Mayo · ketchup · algérienne</b></p><em></em><span>0,30</span></li>
+      </ul></div>
+    </div>
+    <div class="acc__it">
+      <button class="acc__hd" aria-expanded="false"><span class="mono">04</span><b>Douceurs &amp; boissons</b><i></i></button>
+      <div class="acc__bd"><ul>
+        <li><p><b>Tiramisu maison</b></p><em></em><span>4,50</span></li>
+        <li><p><b>Softs 33 cl</b><small>Coca, Zéro, Cherry, Fanta, Sprite, Ice Tea, Tropico, Perrier</small></p><em></em><span>2,20</span></li>
+        <li><p><b>Eau 50 cl</b></p><em></em><span>1,70</span></li>
+      </ul></div>
+    </div>
+  </div>
+  <p class="ct__legal mono">Prix en euros TTC · Titres-restaurant acceptés · Halal</p>
+</section>
+
+<!-- ================= SUR LA PLAQUE (photos réelles) ================= -->
+<section class="gl" id="galerie">
+  <div class="gl__head">
+    <p class="kicker mono">Sur la plaque</p>
+    <h2 class="h2"><span class="clip"><span data-split>Rue</span></span> <span class="clip"><span data-split>Louis-Blanc,</span></span> <span class="clip"><span data-split class="serif">tous les soirs.</span></span></h2>
+  </div>
+  <div class="gl__cols">
+    <div class="gl__col" data-speed="-0.12">
+      <figure class="ph"><img src="img/ig-melt.webp" alt="Le smash pressé à la main" loading="lazy"></figure>
+      <figure class="ph"><img src="img/ig-damier.webp" alt="Smash burgers et waffle fries sur papier damier" loading="lazy"></figure>
+      <figure class="ph"><img src="img/ig-stack.webp" alt="Burger raclette et charcuterie" loading="lazy"></figure>
+    </div>
+    <div class="gl__col" data-speed="0.12">
+      <figure class="ph"><img src="img/ig-cheddar.webp" alt="Cheddar fondu versé sur les frites" loading="lazy"></figure>
+      <figure class="ph"><img src="img/ig-salle.webp" alt="La salle BUNZO" loading="lazy"></figure>
+      <figure class="ph"><img src="img/ig-table.webp" alt="Une table BUNZO" loading="lazy"></figure>
+    </div>
+  </div>
+  <a class="gl__ig" href="https://www.instagram.com/bunzo.fr/" target="_blank" rel="noopener"><span class="mono">Suivre</span><b>@bunzo.fr</b><i>↗</i></a>
+</section>
+
+<!-- ================= AVIS ================= -->
+<section class="av" id="avis">
+  <div class="av__head">
+    <p class="kicker mono">Ce qu'en dit Nantes</p>
+    <p class="av__score"><b>4,8</b><span class="mono">/5 · 3 488 avis Google<br>4,5/5 sur Uber Eats</span></p>
+  </div>
+  <div class="av__cards">
+    <blockquote class="rv"><p>«&nbsp;Pour un fast food qui ferme tard, c'est dur de trouver de la qualité. Là, on trouve tout.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Léa P. · Google</footer></blockquote>
+    <blockquote class="rv"><p>«&nbsp;Le steak façon smashé est excellent, super accueil. Le lieu est très clair et propre.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Christelle B. · Google</footer></blockquote>
+    <blockquote class="rv"><p>«&nbsp;Un burger veggie qui a un vrai goût de burger.&nbsp;»</p><footer class="mono"><span>★★★★★</span>Did I. · Google</footer></blockquote>
+  </div>
+</section>
+
+<!-- ================= VENIR ================= -->
+<section class="vn" id="venir">
+  <div class="vn__head">
+    <p class="kicker mono">Venir</p>
+    <h2 class="h2"><span class="clip"><span data-split>On t'attend</span></span> <span class="clip"><span data-split class="serif">jusqu'à 2h.</span></span></h2>
+    <p class="status mono"><i></i><span data-status></span></p>
+  </div>
+
+  <div class="vn__grid">
+    <figure class="vn__img"><img src="img/ig-salle.webp" alt="La salle BUNZO" loading="lazy"></figure>
+    <div class="vn__addr">
+      <p class="mono">Île de Nantes · près de la place de la République</p>
+      <p class="vn__street">12 rue<br>Louis-Blanc</p>
+      <p class="mono">44200 Nantes</p>
+      <div class="vn__btns">
+        <a class="btn btn--ch" data-magnetic href="https://www.google.com/maps/dir/?api=1&amp;destination=BUNZO%20Smash%20Burger%2012%20Rue%20Louis%20Blanc%2044200%20Nantes" target="_blank" rel="noopener"><span>Itinéraire</span></a>
+        <a class="btn btn--ln" data-magnetic href="tel:+33236661644"><span>02 36 66 16 44</span></a>
+      </div>
+    </div>
+    <table class="hours mono">
+      <caption class="kicker mono">Horaires</caption>
+      <tbody>
+        <tr data-d="1"><th>Lundi</th><td>11h30–14h30 · 18h–2h</td></tr>
+        <tr data-d="2"><th>Mardi</th><td>11h30–14h30 · 18h–2h</td></tr>
+        <tr data-d="3"><th>Mercredi</th><td>11h30–14h30 · 18h–2h</td></tr>
+        <tr data-d="4"><th>Jeudi</th><td>11h30–14h30 · 18h–2h</td></tr>
+        <tr data-d="5"><th>Vendredi</th><td>18h–2h</td></tr>
+        <tr data-d="6"><th>Samedi</th><td>11h30–2h</td></tr>
+        <tr data-d="0"><th>Dimanche</th><td>11h30–2h</td></tr>
+      </tbody>
+    </table>
+    <ul class="vn__svc mono"><li>Sur place</li><li>À emporter</li><li>Livraison Uber Eats</li><li>Halal</li></ul>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="ft" id="ft">
+  <div class="ft__cta">
+    <p class="serif">Une petite faim&nbsp;?</p>
+    <a class="ft__order" data-magnetic href="https://www.ubereats.com/fr/store/bunzo/ALblyguCWyKL4ua7zqPsfQ" target="_blank" rel="noopener"><span>Commander</span><i>↗</i></a>
+  </div>
+  <div class="ft__logo" id="ftLogo">
+    <svg viewBox="0 0 1212 882" aria-label="BUNZO">
+      <g class="f-top"><use href="#lg-top"/></g>
+      <g class="f-word"><use href="#lg-word"/></g>
+      <g class="f-reg"><use href="#lg-reg"/></g>
+      <g class="f-bot"><use href="#lg-bot"/></g>
+    </svg>
+  </div>
+  <div class="ft__row mono">
+    <span>© <span id="yr">2026</span> BUNZO® Smash Burger</span>
+    <button type="button" id="legalBtn">Mentions légales</button>
+    <a href="https://vokumagency.com" target="_blank" rel="noopener">Site par Vokum</a>
+  </div>
+  <p class="ft__health mono">Pour votre santé, évitez de manger trop gras, trop sucré, trop salé. www.mangerbouger.fr</p>
+</footer>
+
+<!-- Barre mobile -->
+<div class="dock" id="dock">
+  <a class="dock__a mono" href="https://www.google.com/maps/dir/?api=1&amp;destination=BUNZO%20Smash%20Burger%2012%20Rue%20Louis%20Blanc%2044200%20Nantes" target="_blank" rel="noopener">Itinéraire</a>
+  <a class="dock__b" href="https://www.ubereats.com/fr/store/bunzo/ALblyguCWyKL4ua7zqPsfQ" target="_blank" rel="noopener">Commander</a>
+</div>
+
+<dialog class="legal" id="legal">
+  <h2>Mentions légales</h2>
+  <p><b>Éditeur</b><br>BUNZO — Smash Burger, 12 rue Louis Blanc, 44200 Nantes · 02 36 66 16 44 · bunzo.fr@gmail.com<br>[Raison sociale, forme juridique, SIRET et directeur de la publication à compléter]</p>
+  <p><b>Hébergement</b><br>Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.</p>
+  <p><b>Conception</b><br>Vokum — vokumagency.com</p>
+  <p><b>Données personnelles</b><br>Ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle.</p>
+  <p><b>Crédits</b><br>Photos : BUNZO. Visuels produits : mises en scène illustratives.</p>
+  <button type="button" class="btn btn--ch" id="legalClose"><span>Fermer</span></button>
+</dialog>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/vendor/SplitText.min.js"></script>
+<script src="js/vendor/lenis.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
