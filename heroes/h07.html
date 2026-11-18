@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>07 — Couverture de magazine</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 07 — Une couverture de magazine : titre géant, burger qui déborde du titre, accroches */
+body,.hero{background:var(--cream);color:var(--g)}
+.hd{color:var(--g)}
+.hd .status i{background:var(--g)}
+.mast{position:absolute;left:var(--pad);right:var(--pad);top:calc(70px + var(--st));z-index:1}
+.mast svg{width:100%;height:auto;aspect-ratio:1212/882;fill:var(--g);overflow:visible;display:block}
+.mast g{transform-box:fill-box;transform-origin:50% 100%}
+.issue{position:absolute;left:var(--pad);right:var(--pad);top:calc(70px + var(--st) + (100vw - 40px)*.728 + 8px);display:flex;justify-content:space-between;font-family:var(--f-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-top:1.5px solid var(--g);border-bottom:1.5px solid var(--g);padding:6px 0;z-index:2}
+.burger{position:absolute;left:50%;top:calc(70px + var(--st) + (100vw - 40px)*.728 + 30px);width:76vw;max-width:520px;translate:-50% 0;z-index:3}
+.cl{position:absolute;z-index:4;max-width:42vw}
+.cl b{display:block;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:20px;line-height:.9;letter-spacing:-.03em}
+.cl span{display:block;font-family:var(--f-s);font-style:italic;font-size:17px;line-height:1.1;margin-top:3px;color:var(--bun)}
+.cl1{left:var(--pad);bottom:calc(168px + var(--sb))}
+.cl2{right:var(--pad);bottom:calc(168px + var(--sb));text-align:right}
+.big{position:absolute;left:var(--pad);bottom:calc(96px + var(--sb));z-index:4;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:9.6vw;line-height:.88;letter-spacing:-.04em}
+.big em{font-family:var(--f-s);font-style:italic;font-weight:400;text-transform:none;color:var(--bun)}
+.code{position:absolute;right:var(--pad);bottom:calc(98px + var(--sb));z-index:4;width:56px;height:34px;background:repeating-linear-gradient(90deg,var(--g) 0 2px,transparent 2px 4px,var(--g) 4px 5px,transparent 5px 8px,var(--g) 8px 11px,transparent 11px 12px)}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:5}
+</style></head><body>
+<section class="hero">
+  <header class="hd"><span class="mono" style="font-size:10px;letter-spacing:.14em">N°1 · NOV. 2026</span><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <div class="mast" id="mast"><svg viewBox="0 0 1212 882" aria-label="BUNZO"><g class="m-top"><use href="../assets/logo-sprite.svg#lg-top"/></g><g class="m-word"><use href="../assets/logo-sprite.svg#lg-word"/></g><g class="m-reg"><use href="../assets/logo-sprite.svg#lg-reg"/></g><g class="m-bot"><use href="../assets/logo-sprite.svg#lg-bot"/></g></svg></div>
+  <p class="issue" id="issue"><span>Édition Louis-Blanc</span><span>Smash burger</span><span>Nantes</span></p>
+  <img class="burger" id="burger" src="../img/burger-sh.webp" alt="Smash burger BUNZO">
+  <p class="cl cl1"><b>4,8 / 5</b><span>3 488 avis Google</span></p>
+  <p class="cl cl2"><b>Le Braisé</b><span>est de retour</span></p>
+  <h1 class="big">Le smash <em>de l'année.</em></h1>
+  <i class="code" aria-hidden="true"></i>
+  <div class="ctas"><a class="btn btn--g" href="#">Voir la carte</a><a class="btn btn--ch" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+gsap.timeline({delay:.3})
+  .from('.m-word',{yPercent:100,scaleY:.2,duration:.9,ease:'expo.out'})
+  .from('.m-top',{yPercent:-60,autoAlpha:0,duration:.8,ease:'expo.out'},'-=.6')
+  .from('.m-bot',{yPercent:60,autoAlpha:0,duration:.8,ease:'expo.out'},'<')
+  .from('.m-reg',{scale:0,duration:.5,ease:'back.out(2)'},'-=.3')
+  .from('#issue',{scaleX:0,duration:.8,ease:'expo.inOut'},'-=.6')
+  .from('#burger',{y:120,autoAlpha:0,rotation:8,duration:1.1,ease:'expo.out'},'-=.4')
+  .from('.cl,.big,.code',{y:24,autoAlpha:0,stagger:.08,duration:.8,ease:'expo.out'},'-=.8')
+  .from('.ctas',{autoAlpha:0,duration:.6},'-=.4')
+  .to('#burger',{y:-8,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1});
+</script>
+</body></html>

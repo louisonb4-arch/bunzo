@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BUNZO — 10 propositions de hero mobile</title>
+<link rel="icon" href="../img/favicon.png">
+<style>
+@font-face{font-family:"Archivo";src:url(../fonts/archivo.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%}
+@font-face{font-family:"Space Mono";src:url(../fonts/space-mono-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Instrument Serif";src:url(../fonts/serif-italic.woff2) format("woff2");font-style:italic}
+:root{--g:#012B1A;--cream:#F3ECDF;--ch:#FFB71B}
+*{box-sizing:border-box}
+body{margin:0;background:#E9E3D6;color:var(--g);font-family:"Archivo",system-ui,sans-serif}
+header{padding:40px 24px 10px;max-width:1500px;margin:0 auto}
+h1{margin:0;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:clamp(34px,6vw,72px);line-height:.9;letter-spacing:-.04em}
+h1 em{font-family:"Instrument Serif";font-weight:400;text-transform:none;letter-spacing:-.01em;color:#C96A1C}
+header p{font-family:"Space Mono";font-size:12px;line-height:1.6;max-width:70ch;margin:16px 0 0;opacity:.75}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:36px 26px;padding:30px 24px 80px;max-width:1500px;margin:0 auto}
+.card{display:flex;flex-direction:column;gap:12px}
+.phone{position:relative;width:100%;aspect-ratio:390/844;border-radius:34px;overflow:hidden;background:#000;box-shadow:0 0 0 8px #0B0F0C,0 30px 50px -20px rgba(1,43,26,.5)}
+.phone iframe{position:absolute;left:0;top:0;width:390px;height:844px;border:0;transform-origin:0 0}
+.meta{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-top:6px}
+.meta h2{margin:0;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:22px;letter-spacing:-.02em;line-height:1}
+.meta h2 span{font-family:"Space Mono";font-weight:400;font-size:12px;color:#C96A1C;margin-right:8px;letter-spacing:0}
+.meta p{margin:6px 0 0;font-family:"Space Mono";font-size:11.5px;line-height:1.55;opacity:.75}
+.btns{display:flex;gap:6px;flex:none}
+.btns button,.btns a{height:36px;padding:0 12px;border-radius:999px;border:1.5px solid var(--g);background:none;color:var(--g);font-family:"Space Mono";font-size:11px;cursor:pointer;display:grid;place-items:center;text-decoration:none}
+.btns button{background:var(--g);color:var(--cream)}
+.tag{display:inline-block;margin-top:8px;font-family:"Space Mono";font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--ch);padding:3px 8px;border-radius:999px}
+</style></head><body>
+<header>
+  <h1>Hero mobile · <em>10 propositions</em></h1>
+  <p>Chaque écran est un vrai hero, joué en taille iPhone (390 × 844). « Rejouer » relance l'animation, « Plein écran » ouvre la version seule (à tester sur ton téléphone). Ceux marqués interactif réagissent au doigt.</p>
+</header>
+<main class="grid" id="grid"></main>
+<script>
+const H=[
+ ['01','Smash typographique','Le burger tombe sur le mot SMASH et l\'écrase : la police passe d\'étroite à ultra-large. Tape l\'écran pour re-smasher.','interactif'],
+ ['02','Le ticket','Un ticket de commande s\'imprime sous la fente, puis le burger sort de la cuisine. « Ta commande est prête. »',''],
+ ['03','Le damier','Le papier damier se retourne case par case en vague jaune cheddar, le burger tombe et rebondit, badge 4,8.',''],
+ ['04','Le sandwich','Le titre devient la garniture : les deux pains BUNZO se referment dessus et l\'écrasent.',''],
+ ['05','La nappe de cheddar','Du cheddar coule du haut et recouvre l\'écran, avec des gouttes. Les mots « croustillant / smashé / juteux » tournent.',''],
+ ['06','Le projecteur','Noir total, un faisceau révèle le burger. Il balaie seul ou suit ton doigt.','interactif'],
+ ['07','Couverture de magazine','Le logo BUNZO en titre de magazine qui se monte pièce par pièce, accroches, code-barres.',''],
+ ['08','Le croc','Comme la croquée du logo : chaque tap croque une bouchée dans le burger, avec miettes et compteur.','interactif'],
+ ['09','Les vraies photos','Leurs photos Insta tombent en polaroïds sur une nappe damier. On les fait glisser au doigt.','interactif'],
+ ['10','Le tableau à palettes','Un tableau d\'affichage façon gare annonce le smash en direct : « Prochain smash 4 min », note, horaires.',''],
+];
+const grid=document.getElementById('grid');
+H.forEach(([n,t,d,tag])=>{const c=document.createElement('article');c.className='card';
+  c.innerHTML=`<div class="phone"><iframe loading="lazy" src="h${n}.html" title="Hero ${n}"></iframe></div>
+  <div class="meta"><div><h2><span>${n}</span>${t}</h2><p>${d}</p>${tag?`<span class="tag">${tag}</span>`:''}</div>
+  <div class="btns"><button type="button">Rejouer</button><a href="h${n}.html" target="_blank" rel="noopener">Plein écran</a></div></div>`;
+  grid.appendChild(c);
+  const f=c.querySelector('iframe');c.querySelector('button').onclick=()=>{f.src=f.src};});
+const fit=()=>document.querySelectorAll('.phone').forEach(p=>{p.querySelector('iframe').style.transform=`scale(${p.clientWidth/390})`});
+addEventListener('resize',fit);new ResizeObserver(fit).observe(grid);fit();
+</script>
+</body></html>

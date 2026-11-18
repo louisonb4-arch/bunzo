@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>06 — Projecteur</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 06 — Noir profond, un projecteur révèle le burger ; on le déplace au doigt (ou il balaie seul) */
+body,.hero{background:#000A05}
+.stage{position:absolute;inset:0;z-index:1}
+.burger{position:absolute;left:50%;top:50%;width:96vw;max-width:560px;translate:-50% -46%}
+.light{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(circle var(--r,170px) at var(--x,50%) var(--y,50%),transparent 0,rgba(0,10,5,.35) 45%,rgba(0,10,5,.94) 100%)}
+.title{position:absolute;left:var(--pad);right:var(--pad);top:calc(88px + var(--st));z-index:4;font-family:var(--f-s);font-style:italic;font-weight:400;font-size:15vw;line-height:.9;letter-spacing:-.02em}
+.title b{display:block;font-family:var(--f-d);font-style:normal;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:.62em;letter-spacing:-.04em;color:var(--ch);margin-top:.1em}
+.ch{display:inline-block;opacity:0;filter:blur(8px)}
+.hint{position:absolute;left:0;right:0;bottom:calc(98px + var(--sb));z-index:4;text-align:center;font-family:var(--f-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:0}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:5;opacity:0}
+.hd{z-index:6}
+</style></head><body>
+<section class="hero" id="hero">
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <div class="stage"><img class="burger" id="burger" src="../img/burger-sh.webp" alt="Smash burger BUNZO"></div>
+  <div class="light" id="light"></div>
+  <h1 class="title" id="title">Le smash,<b>rien d'autre.</b></h1>
+  <p class="hint" id="hint">Promène ton doigt</p>
+  <div class="ctas"><a class="btn btn--ch" href="#">Voir la carte</a><a class="btn btn--ln" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+const L=document.getElementById('light'),hero=document.getElementById('hero');
+const t=document.getElementById('title');const wrap=s=>s.split(/(\s+)/).map(w=>/\s/.test(w)||!w?w:'<span style="display:inline-block;white-space:nowrap">'+w.replace(/\S/g,c=>'<span class="ch">'+c+'</span>')+'</span>').join('');t.innerHTML=t.innerHTML.replace(/>([^<]+)</g,(m,s)=>'>'+wrap(s)+'<').replace(/^([^<]+)/,wrap);
+const p={x:50,y:58,r:0};const apply=()=>{L.style.setProperty('--x',p.x+'%');L.style.setProperty('--y',p.y+'%');L.style.setProperty('--r',p.r+'px')};apply();
+let user=false;
+const sweep=gsap.timeline({repeat:-1,yoyo:true,paused:true,defaults:{ease:'sine.inOut',duration:2.6,onUpdate:apply}})
+  .to(p,{x:30,y:52}).to(p,{x:70,y:62}).to(p,{x:50,y:56});
+gsap.timeline({delay:.4})
+  .to(p,{r:Math.min(innerWidth*.62,320),duration:1.6,ease:'expo.out',onUpdate:apply})
+  .from('#burger',{scale:1.15,rotation:-6,duration:2,ease:'expo.out'},'<')
+  .to('.ch',{opacity:1,filter:'blur(0px)',stagger:.035,duration:.6,ease:'power2.out'},'-=1.2')
+  .to('#hint',{opacity:.55,duration:.6},'-=.3').to('.ctas',{opacity:1,duration:.6},'<')
+  .add(()=>{if(!user)sweep.play()});
+const move=(x,y)=>{user=true;sweep.pause();const r=hero.getBoundingClientRect();gsap.to(p,{x:(x-r.left)/r.width*100,y:(y-r.top)/r.height*100,duration:.5,ease:'power3.out',onUpdate:apply});gsap.to('#hint',{opacity:0,duration:.4})};
+hero.addEventListener('pointermove',e=>move(e.clientX,e.clientY));
+hero.addEventListener('touchmove',e=>move(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+</script>
+</body></html>

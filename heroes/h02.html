@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>02 — Le ticket</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 02 — Un ticket de commande s'imprime, le burger "sort" de la cuisine */
+body{background:var(--cream)}
+.hero{background:var(--cream);color:var(--g)}
+.hd .logo{fill:var(--g)}
+.slot{position:absolute;left:14px;right:14px;top:calc(76px + var(--st));height:12px;border-radius:8px;background:var(--g);box-shadow:inset 0 3px 6px rgba(0,0,0,.6);z-index:4}
+.tk{position:absolute;left:28px;right:28px;top:calc(82px + var(--st));background:#fff;color:var(--ink);font-family:var(--f-m);font-size:12px;padding:20px 18px 26px;z-index:3;
+  box-shadow:0 20px 40px -18px rgba(1,43,26,.35);
+  --z:9px;-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/var(--z) 51% repeat-x,linear-gradient(#000 0 0) top/100% calc(100% - var(--z) + 1px) no-repeat;
+  mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/var(--z) 51% repeat-x,linear-gradient(#000 0 0) top/100% calc(100% - var(--z) + 1px) no-repeat}
+.tk__h{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:10px;letter-spacing:.12em;padding-bottom:12px;border-bottom:1px dashed rgba(0,0,0,.2)}
+.tk__h svg{width:58px;height:42px;fill:var(--ink);margin-bottom:4px}
+.tk ul{list-style:none;margin:0;padding:12px 0;display:grid;gap:8px;border-bottom:1px dashed rgba(0,0,0,.2)}
+.tk li{display:flex;gap:8px;align-items:flex-end;text-transform:uppercase}
+.tk li i{flex:1;border-bottom:1.5px dotted rgba(0,0,0,.3);margin-bottom:4px}
+.tk li.t{font-weight:700;font-size:13px}
+.tk .ord{text-align:center;padding-top:12px;font-size:10px;letter-spacing:.12em}
+.tk .ord b{display:block;font-family:var(--f-d);font-weight:900;font-stretch:125%;font-size:46px;letter-spacing:-.03em;line-height:1;margin-top:4px}
+.burger{position:absolute;left:50%;bottom:calc(150px + var(--sb));width:76vw;max-width:440px;translate:-50% 0;z-index:5}
+.title{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(92px + var(--sb));z-index:6;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:11.4vw;line-height:.86;letter-spacing:-.04em}
+.title em{font-family:var(--f-s);font-style:italic;font-weight:400;text-transform:none;color:var(--bun);letter-spacing:-.01em}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:6}
+.title,.ctas{opacity:0}
+</style></head><body>
+<section class="hero">
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <div class="slot"></div>
+  <div class="tk" id="tk">
+    <div class="tk__h"><svg><use href="../assets/logo-sprite.svg#lg"/></svg><span>12 RUE LOUIS-BLANC · NANTES</span><span id="date">—</span></div>
+    <ul>
+      <li><span>1 × Burger L</span><i></i><span>10,90</span></li>
+      <li><span>2 × smash patty</span><i></i><span>frais</span></li>
+      <li><span>1 × waffle fries</span><i></i><span>✓</span></li>
+      <li><span>1 × sauce Bunzo</span><i></i><span>✓</span></li>
+      <li class="t"><span>Temps d'attente</span><i></i><span>~4 min</span></li>
+    </ul>
+    <p class="ord">COMMANDE N°<b>3488</b></p>
+  </div>
+  <img class="burger" id="burger" src="../img/burger-sh.webp" alt="Smash burger BUNZO">
+  <h1 class="title" id="title">Ta commande <em>est prête.</em></h1>
+  <div class="ctas"><a class="btn btn--g" href="#">Voir la carte</a><a class="btn btn--ch" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+const d=new Date();document.getElementById('date').textContent=d.toLocaleDateString('fr-FR')+' · '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+gsap.set('#tk',{clipPath:'inset(0 0 100% 0)'});
+gsap.timeline({delay:.4})
+  .to('#tk',{clipPath:'inset(0 0 0% 0)',duration:1.6,ease:'steps(22)'})
+  .from('#tk li',{opacity:0,stagger:.12,duration:.01},'<.2')
+  .fromTo('#burger',{y:260,scale:.6,rotation:12,autoAlpha:0},{y:0,scale:1,rotation:-4,autoAlpha:1,duration:1,ease:'back.out(1.4)'},'-=.2')
+  .to('#title',{opacity:1,duration:.01},'-=.5')
+  .from('#title',{yPercent:60,duration:.9,ease:'expo.out'},'<')
+  .to('.ctas',{opacity:1,duration:.6},'-=.5')
+  .to('#burger',{rotation:2,y:-8,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1});
+</script>
+</body></html>

@@ -1,0 +1,30 @@
+/* Base commune des 10 propositions de hero (mobile d'abord) */
+@font-face{font-family:"Archivo";src:url(../fonts/archivo.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Instrument Serif";src:url(../fonts/serif-italic.woff2) format("woff2");font-style:italic;font-display:swap}
+@font-face{font-family:"Space Mono";src:url(../fonts/space-mono-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Space Mono";src:url(../fonts/space-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{--g:#012B1A;--g-deep:#001A0F;--g-2:#06371F;--cream:#F3ECDF;--paper:#FAF6EE;--ink:#0B0F0C;--ch:#FFB71B;--bun:#E9852C;--l:rgba(243,236,223,.16);
+  --f-d:"Archivo",system-ui,sans-serif;--f-s:"Instrument Serif",Georgia,serif;--f-m:"Space Mono",ui-monospace,monospace;--pad:20px;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--g);color:var(--cream);font-family:var(--f-d);-webkit-font-smoothing:antialiased;overflow:hidden}
+img{display:block;max-width:100%;user-select:none;-webkit-user-drag:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+h1,p{margin:0}
+.mono{font-family:var(--f-m)}
+.serif{font-family:var(--f-s);font-style:italic;font-weight:400}
+.hero{position:relative;height:100svh;min-height:560px;overflow:hidden}
+.logo{width:62px;height:45px;fill:currentColor;display:block}
+.hd{position:absolute;z-index:20;top:0;left:0;right:0;padding:calc(14px + var(--st)) var(--pad) 0;display:flex;align-items:center;justify-content:space-between}
+.hd__r{display:flex;align-items:center;gap:12px}
+.status{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.status i{width:7px;height:7px;border-radius:50%;background:#45E08A}
+.menu{width:44px;height:44px;border-radius:50%;background:var(--ch);display:grid;place-content:center;gap:5px}
+.menu i{display:block;width:16px;height:2px;border-radius:2px;background:var(--ink)}
+.ctas{display:flex;gap:8px}
+.btn{flex:1;height:54px;border-radius:999px;display:grid;place-items:center;font-weight:800;font-stretch:115%;font-size:14px;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+.btn--ch{background:var(--ch);color:var(--ink)}
+.btn--ln{box-shadow:inset 0 0 0 1.5px currentColor}
+.btn--ink{background:var(--ink);color:var(--cream)}
+.btn--g{background:var(--g);color:var(--cream)}

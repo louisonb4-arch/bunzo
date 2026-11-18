@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>08 — Le croc</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 08 — Comme le logo : on croque dans le burger. Chaque tap = une bouchée. */
+body,.hero{background:var(--cream);color:var(--g)}
+.hd{color:var(--g)}.hd .status i{background:var(--g)}
+.wrap{position:absolute;left:50%;top:27%;width:96vw;max-width:560px;translate:-50% 0;z-index:2}
+.wrap svg{width:100%;height:auto;display:block;overflow:visible}
+.title{position:absolute;left:var(--pad);right:var(--pad);top:calc(78px + var(--st));z-index:3;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:14.5vw;line-height:.84;letter-spacing:-.05em}
+.title em{display:block;font-family:var(--f-s);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em;color:var(--bun);font-size:.9em}
+.ln{display:block;overflow:hidden}.ln>span{display:inline-block}
+.count{position:absolute;right:var(--pad);bottom:calc(104px + var(--sb));z-index:3;text-align:right;font-family:var(--f-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:0}
+.count b{display:block;font-family:var(--f-d);font-weight:900;font-stretch:125%;font-size:44px;letter-spacing:-.03em;line-height:1;color:var(--g)}
+.tap{position:absolute;left:var(--pad);bottom:calc(108px + var(--sb));z-index:3;font-family:var(--f-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:0;display:flex;align-items:center;gap:8px}
+.tap i{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center}
+.tap i::after{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.crumb{position:absolute;z-index:4;width:7px;height:6px;border-radius:40% 60% 50% 30%;background:#E9852C;pointer-events:none}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:5;opacity:0}
+</style></head><body>
+<section class="hero" id="hero">
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <h1 class="title"><span class="ln"><span>Un croc</span></span><span class="ln"><span><em>et t'es accro.</em></span></span></h1>
+  <div class="wrap" id="wrap">
+    <svg viewBox="0 0 1140 920" id="svg">
+      <defs><mask id="bite" maskUnits="userSpaceOnUse" x="0" y="0" width="1140" height="920"><rect width="1140" height="920" fill="#fff"/><g id="bites"></g></mask></defs>
+      <image href="../img/burger-sh.webp" width="1140" height="920" mask="url(#bite)"/>
+    </svg>
+  </div>
+  <p class="tap" id="tap"><i></i>Tape pour croquer</p>
+  <p class="count" id="count"><b id="n">0</b>bouchée</p>
+  <div class="ctas"><a class="btn btn--g" href="#">Voir la carte</a><a class="btn btn--ch" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+const NS='http://www.w3.org/2000/svg',bites=document.getElementById('bites');let n=0;
+// points de croquée : du haut-droite (comme le logo) vers la gauche
+const spots=[[930,250],[985,420],[860,140],[1000,590],[700,90]];
+function bite(i){
+  const [cx,cy]=spots[i%spots.length];const g=document.createElementNS(NS,'g');
+  // une croquée = un arc de petits cercles (les dents)
+  const R=120;for(let k=0;k<7;k++){const a=-1.2+k*.4;const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',cx+Math.cos(a)*R*.55);c.setAttribute('cy',cy+Math.sin(a)*R*.55);c.setAttribute('r',R*.62);c.setAttribute('fill','#000');g.appendChild(c);}
+  bites.appendChild(g);gsap.from(g.children,{attr:{r:0},duration:.35,stagger:.02,ease:'back.out(2)'});
+  gsap.fromTo('#wrap',{rotation:0},{rotation:-2,duration:.08,yoyo:true,repeat:3});
+  // miettes
+  const svg=document.getElementById('svg').getBoundingClientRect();const k=svg.width/1140;
+  for(let j=0;j<10;j++){const s=document.createElement('i');s.className='crumb';s.style.left=(svg.left+cx*k)+'px';s.style.top=(svg.top+cy*k)+'px';document.body.appendChild(s);
+    gsap.to(s,{x:(Math.random()-.3)*140,y:-40-Math.random()*60,rotation:200,duration:.4,ease:'power2.out'});gsap.to(s,{y:'+=260',opacity:0,delay:.35,duration:.7,ease:'power2.in',onComplete:()=>s.remove()});}
+  n++;document.getElementById('n').textContent=n;document.getElementById('count').lastChild.textContent=n>1?'bouchées':'bouchée';
+  if(navigator.vibrate)try{navigator.vibrate(12)}catch(e){}
+  if(n>=spots.length){gsap.to('#tap',{opacity:0});setTimeout(reset,1600)}
+}
+function reset(){gsap.to(bites.children,{attr:{r:0},duration:.5,stagger:.01,ease:'power2.in',onComplete:()=>{bites.innerHTML='';n=0;document.getElementById('n').textContent=0;}});
+  gsap.fromTo('#wrap',{scale:.9},{scale:1,duration:.8,ease:'elastic.out(1,.5)',delay:.4});gsap.to('#tap',{opacity:.7,delay:.8});}
+gsap.set('.ln>span',{yPercent:110});
+gsap.timeline({delay:.3})
+  .to('.ln>span',{yPercent:0,stagger:.1,duration:1,ease:'expo.out'})
+  .from('#wrap',{y:140,autoAlpha:0,rotation:10,duration:1.1,ease:'expo.out'},'-=.7')
+  .add(()=>bite(0),'+=.2')
+  .to('#count,.ctas',{opacity:1,duration:.6},'+=.3').to('#tap',{opacity:.7,duration:.6},'<');
+document.getElementById('hero').addEventListener('click',e=>{if(e.target.closest('a,button'))return;if(n<spots.length)bite(n)});
+gsap.to('#wrap',{y:-8,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1,delay:2});
+</script>
+</body></html>

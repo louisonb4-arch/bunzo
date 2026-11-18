@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>04 — Le sandwich typographique</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 04 — Le titre devient la garniture : les deux pains le prennent en sandwich et l'écrasent */
+.hero{background:var(--g)}
+.top,.bot{position:absolute;left:50%;width:92vw;max-width:560px;translate:-50% 0;z-index:3}
+.top{top:calc(74px + var(--st))}
+.bot{bottom:calc(92px + var(--sb))}
+.fill{position:absolute;left:0;right:0;top:50%;translate:0 -46%;z-index:2;text-align:center;font-weight:900;font-stretch:125%;text-transform:uppercase;line-height:.84;letter-spacing:-.05em}
+.fill span{display:block}
+.f1{font-size:13vw;color:var(--ch)}
+.f2{font-size:14.2vw;color:var(--cream)}
+.f3{font-family:var(--f-s);font-style:italic;font-weight:400;text-transform:none;font-size:10vw;letter-spacing:-.01em;color:var(--bun);line-height:1;margin-top:.05em}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:5;opacity:0}
+.tags{position:absolute;left:var(--pad);right:var(--pad);top:calc(44% + 21vw);z-index:4;display:flex;justify-content:space-between;font-family:var(--f-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;opacity:0}
+</style></head><body>
+<section class="hero" id="hero">
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <img class="top" id="top" src="../img/l-top.webp" alt="">
+  <h1 class="fill" id="fill"><span class="f1">Sous</span><span class="f2">pression</span><span class="f3">tout devient meilleur.</span></h1>
+  <img class="bot" id="bot" src="../img/l-bottom.webp" alt="">
+  <div class="ctas"><a class="btn btn--ch" href="#">Voir la carte</a><a class="btn btn--ln" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+gsap.timeline({delay:.35})
+  .from('#fill span',{scaleY:0,transformOrigin:'50% 50%',stagger:.08,duration:.7,ease:'expo.out'})
+  .fromTo('#top',{yPercent:-160},{yPercent:-12,duration:.7,ease:'power3.in'},'+=.1')
+  .fromTo('#bot',{yPercent:160},{yPercent:10,duration:.7,ease:'power3.in'},'<')
+  // les pains se referment : le texte s'écrase
+  .to('#top',{yPercent:18,duration:.22,ease:'power4.out'})
+  .to('#bot',{yPercent:-14,duration:.22,ease:'power4.out'},'<')
+  .to('#fill',{scaleY:.72,scaleX:1.06,duration:.22,ease:'power4.out'},'<')
+  .to('#fill',{scaleY:1,scaleX:1,duration:1,ease:'elastic.out(1,.35)'})
+  .to('#top',{yPercent:0,duration:1,ease:'elastic.out(1,.4)'},'<')
+  .to('#bot',{yPercent:0,duration:1,ease:'elastic.out(1,.4)'},'<')
+  .to('.ctas',{opacity:1,duration:.6},'-=.6');
+// respiration : les pains s'entrouvrent légèrement
+gsap.to('#top',{y:-8,duration:2.2,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3.4});
+gsap.to('#bot',{y:6,duration:2.2,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3.4});
+</script>
+</body></html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>10 — Le tableau à palettes</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 10 — Un tableau d'affichage à palettes (comme en gare) annonce le smash en direct */
+.hero{background:var(--g-deep)}
+.board{position:absolute;left:var(--pad);right:var(--pad);top:calc(78px + var(--st));z-index:3;display:grid;gap:8px}
+.row{display:flex;gap:3px;justify-content:flex-start}
+.f{position:relative;width:calc((100vw - 40px - 3px*9)/10);aspect-ratio:3/4.1;background:#0E1511;border-radius:4px;overflow:hidden;
+  font-weight:900;font-stretch:112%;color:var(--cream);font-size:calc((100vw - 40px)/10*.92);line-height:1;display:grid;place-items:center;box-shadow:inset 0 -2px 0 rgba(255,255,255,.04)}
+.f::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.65)}
+.row.y .f{color:var(--ch)}
+.row.s .f{font-size:calc((100vw - 40px)/12*.7);aspect-ratio:3/3.6;font-family:var(--f-m);font-weight:700}
+.burger{position:absolute;left:50%;bottom:calc(132px + var(--sb));width:90vw;max-width:520px;translate:-50% 0;z-index:4}
+.legend{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(98px + var(--sb));z-index:5;display:flex;justify-content:space-between;font-family:var(--f-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#45E08A;margin-right:6px}
+.ctas{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:6;opacity:0}
+</style></head><body>
+<section class="hero">
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" aria-label="Menu"><i></i><i></i></button></div></header>
+  <h1 class="board" id="board" aria-label="BUNZO, smash burger, prochain smash dans 4 minutes"></h1>
+  <img class="burger" id="burger" src="../img/burger-sh.webp" alt="Smash burger BUNZO">
+  <p class="legend"><span><i></i>En cuisine</span><span>Ouvert jusqu'à 2h</span></p>
+  <div class="ctas"><a class="btn btn--ch" href="#">Voir la carte</a><a class="btn btn--ln" href="#">Commander</a></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+const CH=' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,/';
+const rows=[{t:'  BUNZO   ',c:''},{t:'SMASH     ',c:'y'},{t:'BURGER    ',c:'y'},{t:'PROCHAIN    ',c:'s',w:12},{t:'SMASH 4 MIN ',c:'s',w:12}];
+const board=document.getElementById('board');
+const cells=rows.map(r=>{const row=document.createElement('div');row.className='row '+r.c;const n=r.w||10;const arr=[];
+  for(let i=0;i<n;i++){const f=document.createElement('span');f.className='f';f.textContent=' ';row.appendChild(f);arr.push(f)}
+  if(r.w){row.querySelectorAll('.f').forEach(f=>f.style.width='calc((100vw - 40px - 3px*11)/12)')}
+  board.appendChild(row);return arr});
+function flip(f,target,delay){let i=0;const steps=6+Math.floor(Math.random()*10);
+  setTimeout(()=>{const iv=setInterval(()=>{i++;f.textContent=i>=steps?target:CH[Math.floor(Math.random()*CH.length)];
+    gsap.fromTo(f,{scaleY:.82},{scaleY:1,duration:.06});if(i>=steps)clearInterval(iv)},55)},delay)}
+function show(lines){lines.forEach((t,r)=>{const arr=cells[r];t=t.padEnd(arr.length,' ').slice(0,arr.length);arr.forEach((f,i)=>{if(f.textContent!==t[i])flip(f,t[i],r*120+i*30)})})}
+gsap.from('.f',{autoAlpha:0,y:10,stagger:.006,duration:.3,delay:.2});
+setTimeout(()=>show(rows.map(r=>r.t)),500);
+const msgs=[['  BUNZO   ','SMASH     ','BURGER    ','PROCHAIN','SMASH 4 MIN'],['BOEUF     ','FRAIS     ','FRANCAIS  ','HACHE','MAISON'],['  BUNZO   ',' 4,8 / 5  ','3488 AVIS ','OUVERT 7J/7','JUSQU A 2H'],['12 RUE    ','LOUIS     ','BLANC     ','ILE DE','NANTES']];
+let k=0;setInterval(()=>{k=(k+1)%msgs.length;show(msgs[k])},5200);
+gsap.fromTo('#burger',{y:240,autoAlpha:0,rotation:-10},{y:0,autoAlpha:1,rotation:0,duration:1.2,ease:'expo.out',delay:1.4});
+gsap.to('.ctas',{opacity:1,duration:.6,delay:2});
+gsap.to('#burger',{y:-8,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1,delay:2.6});
+</script>
+</body></html>

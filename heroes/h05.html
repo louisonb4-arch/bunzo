@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>05 — Le cheddar qui coule</title>
+<link rel="stylesheet" href="base.css"><link rel="icon" href="../img/favicon.png">
+<style>
+/* 05 — Une nappe de cheddar coule du haut de l'écran et recouvre tout ; le burger émerge */
+.hero{background:var(--g)}
+.drip{position:absolute;left:0;top:0;width:100%;height:120%;z-index:1}
+.drip path{fill:var(--ch)}
+.burger{position:absolute;left:50%;bottom:calc(150px + var(--sb));width:88vw;max-width:500px;translate:-50% 0;z-index:3}
+.title{position:absolute;left:var(--pad);right:var(--pad);top:calc(84px + var(--st));z-index:4;color:var(--g);font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:8.4vw;line-height:.86;letter-spacing:-.045em}
+.title .rot{display:block;height:.86em;overflow:hidden;position:relative}
+.title .rot span{display:block}
+.title em{display:block;font-family:var(--f-s);font-style:italic;font-weight:400;text-transform:none;font-size:.62em;letter-spacing:-.01em;line-height:1.1;margin-top:.2em;color:var(--ink)}
+.bot{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(22px + var(--sb));z-index:5;display:grid;gap:14px}
+.meta{display:flex;justify-content:space-between;font-family:var(--f-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g)}
+.bot{opacity:0}
+.hd{color:var(--g)}
+.hd .status i{background:var(--g)}
+</style></head><body>
+<section class="hero">
+  <svg class="drip" id="drip" viewBox="0 0 400 1000" preserveAspectRatio="none" aria-hidden="true"><path id="dp" d=""/></svg>
+  <header class="hd"><svg class="logo"><use href="../assets/logo-sprite.svg#lg"/></svg><div class="hd__r"><span class="status"><i></i>Ouvert</span><button class="menu" style="background:var(--g)" aria-label="Menu"><i style="background:var(--ch)"></i><i style="background:var(--ch)"></i></button></div></header>
+  <h1 class="title"><span>Fondant.</span><span class="rot" id="rot"><span>Croustillant.</span><span>Smashé.</span><span>Juteux.</span><span>Croustillant.</span></span><em>le smash burger de Nantes</em></h1>
+  <img class="burger" id="burger" src="../img/burger-sh.webp" alt="Smash burger BUNZO">
+  <div class="bot"><p class="meta"><span>12 rue Louis-Blanc</span><span>jusqu'à 2h</span></p><div class="ctas"><a class="btn btn--g" href="#">Voir la carte</a><a class="btn btn--ink" href="#">Commander</a></div></div>
+</section>
+<script src="../js/vendor/gsap.min.js"></script>
+<script>
+// nappe de cheddar : un bord inférieur avec des gouttes de longueurs variables
+const dp=document.getElementById('dp');const N=9;const drops=Array.from({length:N},(_,i)=>({x:(i+.5)*400/N+(Math.random()*16-8),w:14+Math.random()*16,len:40+Math.random()*130}));
+function path(level){ // level = hauteur de la nappe (0..1000)
+  let d=`M0 0 H400 V${level}`;
+  for(let i=N-1;i>=0;i--){const o=drops[i];const L=Math.min(o.len,level*.4);
+    d+=` L${o.x+o.w} ${level} C${o.x+o.w} ${level+L*.7}, ${o.x+o.w*.6} ${level+L}, ${o.x} ${level+L} C${o.x-o.w*.6} ${level+L}, ${o.x-o.w} ${level+L*.7}, ${o.x-o.w} ${level}`;}
+  return d+` L0 ${level} Z`;}
+const st={v:0};dp.setAttribute('d',path(0));
+gsap.set('#title, .title>*',{});
+gsap.set('.title>span:first-child, .title .rot, .title em',{opacity:0,y:30});
+gsap.timeline({delay:.3})
+  .to(st,{v:1010,duration:2,ease:'power2.inOut',onUpdate:()=>dp.setAttribute('d',path(st.v))})
+  .to('.title>span:first-child, .title .rot, .title em',{opacity:1,y:0,stagger:.1,duration:.8,ease:'expo.out'},'-=1')
+  .fromTo('#burger',{yPercent:80,autoAlpha:0,scale:.8},{yPercent:0,autoAlpha:1,scale:1,duration:1.1,ease:'expo.out'},'-=.7')
+  .to('.bot',{opacity:1,duration:.6},'-=.6')
+  .add(()=>{ // les mots tournent
+    const spans=document.querySelectorAll('#rot span');const h=spans[0].offsetHeight;let i=0;
+    setInterval(()=>{i++;gsap.to('#rot span',{y:-h*i,duration:.7,ease:'expo.inOut',onComplete:()=>{if(i===spans.length-1){i=0;gsap.set('#rot span',{y:0})}}})},2000);
+  })
+  .to('#burger',{y:-10,duration:2.4,ease:'sine.inOut',yoyo:true,repeat:-1});
+</script>
+</body></html>
